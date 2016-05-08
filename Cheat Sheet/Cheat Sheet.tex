@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend,mathrsfs,mathtools,setspace}
+\usepackage[shortlabels]{enumitem}
+\usepackage[nobreak=true]{mdframed}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}
+\renewenvironment{leftbar}[2][\hsize]{
+\def\FrameCommand
+{
+    {\color{#2}\vrule width 3pt}
+    \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newtheorem*{prop}{Proposition}
+\renewcommand{\theenumi}{\alph{enumi}}
+\newtheorem{theorem}{Theorem}
+\newcommand*{\QEDB}{\hfill\ensuremath{\square}}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\pr}[1]{\textrm{Pr}[#1]}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dpic}[1]{\begin{center}\includegraphics[width=0.5\textwidth]{#1}\end{center}}
+\newcommand{\dpicl}[1]{\\\includegraphics[width=0.5\textwidth]{#1}\\}
+\newcommand{\tpic}[1]{\begin{center}\includegraphics[width=0.33\textwidth]{#1}\end{center}}
+\newcommand{\wpic}[1]{\begin{center}\includegraphics[width=0.8\textwidth]{#1}\end{center}}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqx}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{\begin{enumerate}[1.]#1\end{enumerate}}}
+\newcommand{\ex}[1]{\easy{blue}{#1}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\items}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\itemss}[2]{\begin{itemize}[#1]#2\end{itemize}}
+\newcommand{\rng}[2]{#1,\ldots,#2}
+\newcommand{\E}[1]{E[#1]}
+\newcommand{\var}[1]{\x{Var}[#1]}
+\newcommand{\e}{\varepsilon}
+\newcommand{\limty}{\lim_{n\rightarrow\infty}}
+\newcommand{\ninfty}{n\rightarrow\infty}
+\newcommand{\cov}{\x{cov}}
+\newmdenv[topline=false, rightline=false, bottomline=false,%
+  linewidth=3pt, innerrightmargin=0pt, leftmargin=4pt,%
+  innerleftmargin=5pt, skipabove=5pt, skipbelow=5pt]{mdleftbar}
+\newcommand{\example}[2]{\textbf{Example: }\\#1\begin{mdleftbar}\onehalfspacing{#2}\end{mdleftbar}}
+\newcommand{\cur}{\mathscr}
+\newcommand{\bmat}[1]{\begin{bmatrix*}[r]#1\end{bmatrix*}}
+\newcommand{\bmatc}[1]{\begin{bmatrix*}[c]#1\end{bmatrix*}}
+\newcommand{\bmats}[2]{\begin{bmatrix}[#1]#2\end{bmatrix}}
+\newcommand{\case}[2]{\eq{#1=\begin{cases}#2\end{cases}}}
+\newcommand{\intlim}[2]{\int_{#1}^{#2}}
+
+\title{CS70 - Final Cheat Sheet}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+\subsection*{Continuous RVs}
+\eqs{
+\textbf{Memoryless Expo}\\
+Let $X = $Expo($\lambda$). Then, for $s,t > 0$
+\eq{\pr{X > t +s | X > s} = \pr{X > t}}
+\textbf{Scaling Expo}\\
+Let $X = $Expo($\lambda$) and $Y = aX$ for some $a > 0$
+\eq{\pr{Y > t} = \x{Expo}(\lambda/a)}
+\eq{a\times \x{Expo}(\lambda) = \x{Expo}(\lambda /a)}
+\textbf{Scaling Uniform}\\
+Let $X = U[0,1]$ and $Y = a+bX$ where $b > 0$
+\eq{\pr{Y \in (y,y +\delta)}=\frac{1}{b}{\delta}, \xs{for} a < y < a+b}
+\eq{f_Y (y) = \frac{1}{b} \xs{for} a < y < a+b \implies Y = U[a,a+b]}
+\textbf{Scaling PDF}\\
+ Let $f_X (x)$ be the pdf of $X$ and $Y = a+bX$ where $b > 0$
+\eq{\pr{Y \in (y,y +\delta)}=f_X (\frac{y-a}{b})\frac{\delta}{b}}
+\eq{f_Y (y) =\frac{1}{b}f_X (\frac{y-a}{b})}
+}
+\end{document}
