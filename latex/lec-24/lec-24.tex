@@ -1,0 +1,156 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend,mathrsfs}
+\usepackage[shortlabels]{enumitem}
+\usepackage[nobreak=true]{mdframed}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}
+\renewenvironment{leftbar}[2][\hsize]{
+\def\FrameCommand
+{
+    {\color{#2}\vrule width 3pt}
+    \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newtheorem*{prop}{Proposition}
+\renewcommand{\theenumi}{\alph{enumi}}
+\newtheorem{theorem}{Theorem}
+\newcommand*{\QEDB}{\hfill\ensuremath{\square}}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\pr}[1]{\textrm{Pr}[#1]}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dpic}[1]{\begin{center}\includegraphics[width=0.5\textwidth]{#1}\end{center}}
+\newcommand{\dpicl}[1]{\\\includegraphics[width=0.5\textwidth]{#1}\\}
+\newcommand{\tpic}[1]{\begin{center}\includegraphics[width=0.33\textwidth]{#1}\end{center}}
+\newcommand{\wpic}[1]{\begin{center}\includegraphics[width=0.8\textwidth]{#1}\end{center}}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqx}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{\begin{enumerate}[1.]#1\end{enumerate}}}
+\newcommand{\ex}[1]{\easy{blue}{#1}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\items}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\itemss}[2]{\begin{itemize}[#1]#2\end{itemize}}
+\newcommand{\rng}[2]{#1,\ldots,#2}
+\newcommand{\E}[1]{E[#1]}
+\newcommand{\var}[1]{\x{Var}[#1]}
+\newcommand{\e}{\varepsilon}
+\newcommand{\limty}{\lim_{n\rightarrow\infty}}
+\newcommand{\ninfty}{n\rightarrow\infty}
+\newcommand{\cov}{\x{cov}}
+\newmdenv[topline=false, rightline=false, bottomline=false,%
+  linewidth=3pt, innerrightmargin=0pt, leftmargin=4pt,%
+  innerleftmargin=5pt, skipabove=5pt, skipbelow=5pt]{mdleftbar}
+\newcommand{\cur}{\mathscr}
+
+\title{CS70 - Lecture 24 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Two State Markov Chain}
+%%%% Notes %%%%
+\simple{
+    \item Describes a random motion in $\set{0,1}$
+}
+%%%% Topic %%%%
+\subsection*{Finite Markov Chain}
+%%%% Notes %%%%
+\simple{
+    \item What happens in the future only depends on the current state (amnesic, but successive states are dependent on previous value)
+    \item A finite set of states: $\cur{X} = \set{1,2,\ldots,K}$
+    \item A probability distribution $\pi_0$ on $\cur{X} : \pi_0(i) \ge 0,\sumlim{i}{}{\pi_0(i) = 1}$
+    \item Transition probabilities: $P(i,j) \xs{for} i,j \in \cur{X}$
+    \items{
+        \item $P(i,j) \ge 0,\forall j; \sumli{j}{}{P(i,j) = 1},\forall i$
+    }
+    \item $\set{X_n,n \ge 0}$ is defined so that
+    \items{
+        \item $X_n$ = state at time $n$ from time $0,1,\ldots$
+        \item Define how you start: $\pr{X_0 = i} = \pi_0(i),i \in \cur{X}$ (initial distribution)
+        \item Define how you move: $\pr{X_{n+1} = j | X_0,\ldots,X_n = i} = P(i,j),i,j \in \cur{X}$
+        \items{
+            \item $P(i,j)$ does not depend on what happened in the past or time.
+            
+        }
+    }
+}
+%%%% Topic %%%%
+\subsection*{Markov Chain Calculations}
+%%%% Notes %%%%
+\textbf{First Passage Time: Example 1}
+\items{
+    \item Flip a coin with $\pr{H}=p$ until we get $H$ (Use Markov Chain to determine why it will take $\frac{1}{p}$ flips on average ($G(p)$)
+    \item Define a Markov Chain:
+    \items{
+        \item $X_0=S$ (start)
+        \item $X_n=S$ for $n\ge1$ if the last flip was $T$ w. no $H$ yet
+        \item $X_n=E$ for $n \ge 1$, if we already got $H$ (end)
+    }
+    \tpic{se}
+    \item Let $\beta(S)$= the avg. time until we reach $E$, starting from $S$, then...
+    \item \textbf{Claim}: $\beta(S)=1+q\beta(S)+p0$ decomposes into:
+    \items{
+        \item First step (1)
+        \item Returns to $S$: still need $\beta(S)$ steps to get to $E$ w. prob. $q$ ($q\beta(S)$)
+        \item Got to $E$ (Found heads, needs 0 steps to get to $E$ w. prob $p$ ($p0$)
+    }
+    \item Subtract $q\beta(S)$ from both sides to get $\beta(S)=\frac{1}{p}$
+    \item Time until $E$ is $G(p)$, so the mean of $G(p)$ is $\frac{1}{p}$
+}
+\textbf{First Passage Time: Example 2}
+\dpic{fpt2}
+\items{
+    \item Let $\beta(i)$= avg. time from state $i$ until $E$ (end)
+    \item \textbf{First Step Equations}
+    \items{
+        \item $\beta(S)=1+p\beta(H)+q\beta(T)$
+        \item $\beta(H)=1+p0+q\beta(T)$
+        \item $\beta(T)=1+p\beta(H)+q\beta(T)$
+    }
+    \item \textbf{Solve:} $\beta(S) = 2+3qp^{-1} +q^2p^{-2}$ (E.g., $\beta(S) = 6$ if $p = 1/2$)
+}
+\textbf{First Passage Time: Example 3}
+\dpic{fpt3}
+\items{
+    \item $\beta(S) = 1+\frac{1}{6}\sumlim{j=1}{6}{\beta(j)}$
+    \item $\beta(1) = 1+\frac{1}{6}\sumlim{j=1}{6}{\beta(j)}$
+    \item $\beta(i) = 1+\frac{1}{6}\sumlim{j=1,\ldots,6;j\ne8−i}{}{\beta(j)},i = 2,\ldots,6$
+    \item Symmetry: $\beta(2) = \cdots = \beta(6) = \gamma$. Also, $\beta(1) = \beta(S)$.
+    \items {
+    	\item Thus, $\beta(S) = 1+ (5/6)\gamma +\beta(S)/6; \gamma = 1+ (4/6)\gamma + (1/6)\beta(S)$
+    	\item $\implies \cdots \beta(S) = 8.4$
+    }
+}
+\subsection*{Summary:}
+\textbf{First Step Equations}
+\items{
+    \item Given $X_n$ is a Markov Chain on $\cur{X}$ and $A,B \subset \cur{X}$ with $A\cap B=\emptyset$
+    \dpic{fse}
+    \item Define $T_A = min\set{n \ge 0 | X_n \in A}$ and $T_B = min\set{n \ge 0 | X_n \in B}$
+    \item Let $\beta(i) = \E{T_A | X_0 = i}$ and $\alpha(i) = \pr{T_A < T_B | X_0 = i},i\in X$
+    \item $\beta(i)$ denotes a timestep so it adds 1
+    \items{
+        \item $\beta(i) = 0,i \in A$
+        \item $\beta(i) = 1+\sumlim{j}{}{P(i,j)\beta(j)},i \not\in A$
+    }
+    \item $\alpha(i)$ denotes probabilities, so there is no 1
+    \items{
+        \item $\alpha(i) = 1,i \in A$
+        \item $\alpha(i) = 0,i \in B$
+        \item $\alpha(i) = \sumlim{j}{}{P(i,j)\alpha(j)},i \not\in A\cup B$
+    }
+}
+\end{document}

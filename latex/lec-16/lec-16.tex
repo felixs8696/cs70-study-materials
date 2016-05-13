@@ -1,0 +1,104 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow, listings}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}\newcommand{\x}[1]{\textrm{ #1 }}\newcommand{\pr}{\textrm{Pr}}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+
+\title{CS70 - Lecture 16 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Set Notation Review}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Set $A$, Complement $\bar{A}$
+    \item Union (In either: or): $A \cup B$
+    \item Intersection (In both: and): $A \cap B$
+    \item Difference (In A, not B) $A \setminus B$
+    \item Symmetric Difference (In only one: xor) $A \Delta B$
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Probability}
+%%%% Notes %%%%
+\begin{itemize}
+    \item event $E$ = subset of outcome: $E \subset \Omega$
+    \item Any Sample Space: $\pr[E]=\sum\limits_{\omega \in E}\pr[\omega]$
+    \item Uniform Space: $\pr[E]=\frac{|E|}{|\Omega|}$
+    \item $p_n := \pr[E_n]=\frac{|E_n|}{|\Omega|}$
+    \begin{itemize}
+        \item $p_n := \dfrac{\binom{n}{k}}{|\omega|^{n}}$ if $E = n \x{coin tosses with exactly} k$ heads 
+    \end{itemize}
+\end{itemize}
+\begin{mdframed}
+\textbf{Stirling Formula:} (for large $n$)
+\begin{itemize}
+    \item $n! \approx \sqrt{2\pi n}(\frac{n}{e})^n$
+    \item $\pr[E]=\frac{|E|}{|\Omega|}$
+    \begin{itemize}
+        \item Can apply Stirling Formula because $|E| \x{and} |\Omega|$ are defined by combinations (factorials)
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Probability is Additive}
+%%%% Notes %%%%
+\begin{itemize}
+    \item If events $A$ and $B$ are disjoint, then sum probabilities
+    \item Non-disjoint sets, use Inclusion/exclusion property: $\pr[A\cup B] = \pr[A]+\pr[B]-\pr[A\cap B]$
+    \item \textbf{Union bound}: $\pr[A_1\cup \cdots \cup A_n] \le \pr[A_1]+\cdots+\pr[A_n]$
+    \item If $A_1,...,A_N$ are a pairwise disjoint partition of $\Omega$ and $\cup^{N}_{m=1}A_m=\Omega$, then $\pr[B]=\pr[B\cap A_1]+\cdots+\pr[B\cap A_N]$
+\end{itemize}
+\begin{mdframed}
+\textbf{Inclusion/Exclusion Property:}\\
+$\pr[A\cup B] = \pr[A]+\pr[B]-\pr[A\cap B]$\\
+\textbf{Union Bound:}\\
+$\pr[A_1\cup \cdots \cup A_n] \le \pr[A_1]+\cdots+\pr[A_n]$\\
+\textbf{Law of Total Probability:}\\
+If $A_1,...,A_N$ are a pairwise disjoint partition of $\Omega$ and $\cup^{N}_{m=1}A_m=\Omega$ then,\\
+$\pr[B]=\pr[B\cap A_1]+\cdots+\pr[B\cap A_N]$
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Conditional Probability}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Probability of $A$ given $B$
+    \item $\pr[A|B]=\frac{\pr[A\cap B]}{\pr[B]}$
+\end{itemize}
+\begin{mdframed}
+\textbf{Product Rule}
+\begin{equation}\pr[A_1\cap\cdots\cap A_n]=\pr[A_1]\pr[A_2|A_1]\cdots\pr[A_n|A_1\cap\cdots\cap A_{n-1}]\end{equation}
+\textbf{Total Probabability $\times$ Product Rule}
+\begin{equation}\pr[B]=\pr[A_1]\pr[B|A_1]+\cdots+\pr[A_N]\pr[B|A_N]\end{equation}
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Causality vs. Correlation}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Events $A$ and $B$ are \textbf{positively correlated} if $\pr[A\cap B] > \pr[A]\pr[B]$, but this does not imply causation
+    \item Eliminate external/common causes to test causality
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Bayes Rule}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Let $m$ = number of situations where $A \x{and} B$ occurred, and $n$ = number of situations where $\bar{A} \x{and} B$ occurred.
+    \item Therefore: $\pr[A|B]=\frac{m}{m+n}$
+\end{itemize}
+\begin{mdframed}
+\textbf{Bayes Rule} (Simplified using Law of Total Probability)
+\begin{equation}\pr[A_n|B] =\frac{\pr[A_n]\pr[B|A_n]}{\sum\limits_m\pr[A_m]\pr[B|A_m]}=\frac{\pr[A_n]\pr[B|A_n]}{\pr[B]}\end{equation}
+\end{mdframed}
+\subsection*{Independence}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Two events $A$ and $B$ are independent if $\pr[A\cap B]=\pr[A]\pr[B]$
+    \item Two events $A$ and $B$ are independent if and only if $\pr[A|B]=\pr[A]$
+    \item $\pr[A]$ decreases/increases given $B$
+\end{itemize}
+\begin{mdframed}
+If $A$ and $B$ are \textbf{independent} sets:
+\begin{equation}\pr[\bar{A}\cap \bar{B}]=1-A\cup B\end{equation}
+\begin{equation}\pr[A\cap B]=\pr[A]+\pr[B]-\pr[A\cup B]\end{equation}
+\end{mdframed}
+\end{document}

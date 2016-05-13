@@ -65,6 +65,52 @@
 \begin{document}
 \maketitle
 
+%%%% Topic %%%%
+\subsection*{Distributions Review}
+%%%% Notes %%%%
+\eqs{
+\begin{minipage}{.5\linewidth}
+\textbf{Uniform $(U[1,\cdots,n]); m=\rng{1}{n}$}
+    \items{
+        \item $\pr{X=m}=\frac 1n$
+        \item $\E{X}=\frac{n+1}{2}$
+        \item $\var{X}=\frac{1}{12}(b-a)^2$
+    }
+    \item \textbf{Binomial $(B(n,p)); m=\rng{0}{n}$}
+    \items{
+        \item $\pr{X=m}=\binom{n}{m}p^m(1-p)^{n-m}$
+        \item $\E{X}=np$
+        \item $\var{X}=np(1-p)$
+    }
+    \item \textbf{Bernoulli $(B(p)); m=\rng{0}{n}$}
+    \items{
+        \item $\pr{X=m}=p^m(1-p)^{n-1}$
+        \item $\E{X}=p$
+        \item $\var{X}=p(1-p)$
+    }
+\end{minipage}
+\begin{minipage}{.5\linewidth}
+    \item \textbf{Geometric $(G(p)); n=1,2,\ldots$}
+    \items{
+        \item $\pr{X=n}=(1-p)^{n-1}p$
+        \item $\E{X}=\frac 1p$
+        \item $\var{X}=\frac{1-p}{p^2}$
+    }
+    \item \textbf{Poisson $(P(\lambda)); n\ge 0$}
+    \items{
+        \item $\pr{X=n}=\frac{\lambda^n}{n!}e^{-\lambda}$
+        \item $\E{X}=\lambda$
+        \item $\var{X}=\lambda$
+    }
+    \item \textbf{Indicator $X=1\xs{or}0$}
+    \items{
+        \item $\pr{X=1}=p$, $\pr{X=0}=(1-p)$
+        \item $\E{X}=p$
+        \item $\var{X}=p(1-p)$
+    }
+\end{minipage}
+}
+
 \subsection*{Continuous RVs}
 \eqs{
 \textbf{Memoryless Expo}\\

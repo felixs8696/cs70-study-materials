@@ -1,0 +1,369 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\pr}[1]{\textrm{Pr}[#1]}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqx}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\renewenvironment{leftbar}[2][\hsize]
+{
+    \def\FrameCommand
+    {
+        {\color{#2}\vrule width 3pt}
+        \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{\begin{enumerate}[1.]#1\end{enumerate}}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\items}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\rng}[2]{#1,\ldots,#2}
+\newcommand{\E}[1]{E[#1]}
+\newcommand{\var}[1]{\x{Var}[#1]}
+\newcommand{\e}{\varepsilon}
+\newcommand{\limty}{\lim_{n\rightarrow\infty}}
+\newcommand{\ninfty}{n\rightarrow\infty}
+
+\title{CS70 - Lecture 21 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Distributions Review}
+%%%% Notes %%%%
+\simple{
+    \item \textbf{Uniform $(U[1,\cdots,n]); m=\rng{1}{n}$}
+    \items{
+        \item $\pr{X=m}=\frac 1n$
+        \item $\E{X}=\frac{n+1}{2}$
+    }
+    \item \textbf{Binomial or Bernoulli $(B(n,p)); m=\rng{0}{n}$}
+    \items{
+        \item $\pr{X=m}=\binom{n}{m}p^m(1-p)^{n-m}$
+        \item $\E{X}=np$
+    }
+    \item \textbf{Geometric $(G(p)); n=1,2,\ldots$}
+    \items{
+        \item $\pr{X=n}=(1-p)^{n-1}p$
+        \item $\E{X}=\frac 1p$
+    }
+    \item \textbf{Poisson $(P(\lambda)); n\ge 0$}
+    \items{
+        \item $\pr{X=n}=\frac{\lambda^n}{n!}e^{-\lambda}$
+        \item $\E{X}=\lambda$
+    }
+    \item \textbf{Indicator $X=1\xs{or}0$}
+    \items{
+        \item $\pr{X=1}=p$, $\pr{X=0}=(1-p)$
+        \item $\E{X}=p$
+    }
+}
+%%%% Topic %%%%
+\subsection*{Poisson and Queuing} (Derivation in previous notes)
+%%%% Notes %%%%
+\simple{
+    \item Flip coin $n$ times, $\pr{H}=\frac{\lambda}{n}$
+    \item RV $X$ = no. of heads (Bernoulli indicator -when 1)
+    \item $X=B(n,\frac{\lambda}{n})$
+    \item Distribution of $X$ "for large $n$"
+}
+\items{
+    \item Distribution of the number of events in an interval
+    \item The average value comes out to $\lambda$
+    \item Cut up situation into $n \rightarrow \infty$ intervals described by Beronoulli indicators
+    \item This means you can assume no two events occur in the same interval and there is a $\frac{\lambda}{n}$ chance the indicator is 1 in any interval
+}
+%%%% Topic %%%%
+\subsection*{Independence Review}
+%%%% Notes %%%%
+\simple{
+    \item $X,Y$ are independent if and only if:
+    \items{
+        \item $\pr{X=x,Y=y}=\pr{X=x}\pr{Y=y},\forall x,y$
+        \item $\pr{X\in A, Y\in B}=\pr{X\in A}\pr{Y\in B},\forall A,B$
+    }
+    \item $X,Y,Z,\ldots$ are mutually indpendent if and only if:
+    \items{
+        \item $\pr{X=x,Y=y,Z=z,\ldots}=\pr{X=x}\pr{Y=y}\pr{Z=z}\cdots,\forall x,y,z,\ldots$
+        \item $\pr{X\in A,Y\in B,Z\in C,\ldots}=\pr{X\in A}\pr{Y\in B}\pr{Z\in C}\cdots,\forall A,B,C,\ldots$
+    }
+    \item If $U,V,W,X,Y,Z,\ldots$ are all mutually independent then:
+    \items{
+        \item $f(U,V),g(W,X,Y),h(Z,\dots),\ldots$ are mutually independent
+    }
+}
+%%%% Topic %%%%
+\subsection*{Variance}
+%%%% Notes %%%%
+\simple{
+    \item Measures deviation from the mean value (Standard deviation ($\sigma(X)$) squared)
+    \item Use squared distance as a continuous function that you can do derivatives and other operations on.
+    \item To calculate intermediate value $E[X^2]$ of expectations with infinite series:
+    \items{
+        \item Calculate $\E{X^2}-(1-p)\E{X^2}=p\E{X^2}$
+        \item This gives you $p\E{X^2}$ in terms of $\E{X}$ and a known distribution (total dist.=1)
+        \item Divide both sides by $p$
+    }
+    \item Variande of the constant is $c$ that constant squared $\var{c}=c^2$
+}
+\items{
+    \item $\var{X}=\E{(X-\E{X})^2}$
+    \item $=\E{X^2-2X\E{X}+\E{X}^2}$
+    \item $=\E{X^2}-2\E{X}\E{X}+\E{X}^2$
+    \item $=\E{X^2}-\E{X}^2$
+}
+\eqs{
+\textbf{Variance of $X$}
+\eq{\sigma^2(X):=\var{X}=\E{(X-\E{X})^2}=\E{X^2}-\E{X}^2}
+}
+\eqs{
+\textbf{Potential Final Question:}\\
+Give an example where this ratio $\rightarrow\infty$
+\eq{\frac{\sigma(X)}{\E{\abs{X-\E{X}}}}}
+}
+\eqs{
+\textbf{Uniform Variance}\\
+Assume that $\pr{X=i}=\frac{1}{n}$ for $i\in\set{1,\ldots,n}$
+\eq{\E{X}=\frac{1}{n}\sumlim{i=1}{n}{i}=\frac{1}{n}\frac{n(n+1)}{2}=\frac{n+1}{2}}
+\eq{\E{X^2}=\sumlim{i=1}{n}{i^2\pr{X=i}}=\frac{1}{n}\sumlim{i=1}{n}{i^2}=\frac{1+3n+2n^2}{6}}
+\eq{\var{X}=\frac{1+3n+2n^2}{6}-\frac{(n+1)^2}{4}=\frac{n^2-1}{12}}
+}
+\eqs{
+\textbf{Geometric Distribution Variance}\\
+$X=G(p)$, $\pr{X=n}=(1-p)^{n-1}p$ for $n\ge1$
+\eq{\E{X}=\frac{1}{p}}
+\begin{align*}
+\E{X^2}&=p+4p(1-p)+9p(1-p)^2+\ldots\\
+(1-p)\E{X^2}&=p(1-p)+4p(1-p)^2+9p(1-p)^3+\ldots\\
+p\E{X^2}&=2(p+2p(1-p)+3p(1-p)^2+\ldots)\\
+&\quad-(p+p(1-p)+p(1-p)^2+\ldots)\\
+&=2\E{X}-\x{Distribution}\\
+p\E{X^2}&=(2\E{X}-1)=(2(\frac{1}{p})-1)=\frac{2-p}{p}
+\end{align*}
+\eq{\E{X^2}=\frac{2-p}{p^2}}
+\eq{\var{X}=\E{X^2}-\E{X}^2=\frac{2-p}{p^2}-\frac{1}{p^2}=\frac{1-p}{p^2}}
+\eq{\sigma(X)=\frac{\sqrt{1-p}}{p}}
+}
+\eqs{
+\textbf{Fixed Points Variance}\\
+Number of fixed points in a random permutation of $n$ items\\
+i.e. Number of students that get hw back with RV $X=X_1+X_2+\cdots+X_n$\\
+$X_i$ = indicator for $i$th student getting hw back
+\eq{\E{X}=1}
+\begin{align*}
+\E{X^2}&=\sumlim{i}{}{\E{X_i^2}}+\sumlim{i\ne j}{}{\E{X_iX_j}}\\
+&=n\times(1\times\pr{X_i=1}+0\times\pr{X_i=0}=\frac{1}{n})\\
+&+n(n-1)\times(1\times\pr{X_i=1\cap X_j=1}+0\times\pr{\x{"anything else"}}
+=\frac{1\times1\times(n-2)!}{n!}=\frac{1}{n(n-1)})
+\end{align*}
+\eq{\E{X^2}=2}
+\eq{\var{X}=\E{X^2}-\E{X}^2=2-1=1}
+}
+\eqs{
+\textbf{Binomial}\\
+Flip coin with $\pr{H}=p$\\
+$X=X_1+X_2+\cdots+X_n$ no. of heads ($X_i,X_j$ are independent)\\
+$X_i=1$ if $i$th flip is heads, $X_i=0$ otherwise (indicator RV)
+\eq{\E{X}=np}
+\eqx{\E{X_i^2}=1^2\times p + 0^2\times(1-p)=p}
+\eqx{\var{X_i}=p-(\E{X_i})^2=p-p^2=p(1-p)}
+\eq{\var{X}=\var{X_1+X_2+\cdots+X_n}=n\var{X_i}=np(1-p)}
+}
+%%%% Topic %%%%
+\subsection*{Properties of Variance}
+%%%% Notes %%%%
+\simple{
+    \item $\var{cX}=c^2\var{X}$ where $c$ is a constant
+    \item $\var{X+c}=\var{X}$ where $c$ is a constant (shifts center)
+}
+\textbf{Variance of the Sum of 2 Independent RVs}
+\items{
+    \item \textbf{Thm:} If $X$ and $Y$ are independent, then $\var{X+Y}=\var{X}+\var{Y}$
+    \items{
+        \item Assume $\E{X}=\E{Y}=0$ (You can just shift this to accountn for any other RVs)
+        \item $\E{XY}=\E{X}\E{Y}=0$ (By Independence)
+    }
+}
+\begin{align*}
+\var{X+Y}&=\E{(X+Y)^2}\\
+&=\E{X^2+2XY+Y^2}\\
+&=\E{X^2}+2\E{XY}+\E{Y^2}\\
+&=\E{X^2}+E{Y^2}\\
+&=\var{X}+\var{Y}
+\end{align*}
+\textbf{Variance of the Sum of Multiple Independent RVs}
+\items{
+    \item \textbf{Thm:} If $X,Y,Z,\ldots$ are independent, then $\var{X+Y+Z+\cdots}=\var{X}+\var{Y}+\var{Z}+\cdots$
+    \items{
+        \item Assume $\E{X}=\E{Y}=\E{Z}=\cdots=0$ (You can just shift this to accountn for any other RVs)
+        \item $\E{XY}=\E{XZ}=\E{YZ}=\cdots=0$ (By Independence)
+    }
+}
+\begin{align*}
+\var{X+Y+Z+\cdots}&=\E{(X+Y+Z+\cdots)^2}\\
+&=\E{X^2+Y^2+Z^2+\cdots+2XY+2XZ+2YZ+\cdots}\\
+&=\E{X^2}+\E{Y^2}+\E{Z^2}+0+\cdots+0\\
+&=\var{X}+\var{Y}+\var{Z}+\cdots
+\end{align*}
+\eqs{
+\textbf{If $X$ and $Y$ are Independent}
+\eq{\var{X+Y}=\var{X}+\var{Y}}
+\textbf{If $X,Y,Z,\ldots$ are Independent}
+\eq{\var{X+Y+Z+\cdots}=\var{X}+\var{Y}+\var{Z}+\cdots}
+}
+%%%% Topic %%%%
+\subsection*{Inequalities: Overview}
+%%%% Notes %%%%
+\simple{
+    \item Markov: $\pr{X\ge a}\le\frac{\E{f(X)}}{f(a)}$, for all $a$ such that $f(a)>0$ and $f:\R\rightarrow[0,\infty)$ is non-decreasing
+    \items{
+        \item Bound the probability of being at least $a$ away from the mean $\E{X}$
+    }
+    \item Chabyshev: $\pr{\abs{X-\E{X}}>a}\le\frac{\var{X}}{a^2}$
+    \items{
+        \item Bound probability of getting at least $a$ away from the mean $\E{X}$
+    }
+}
+\textbf{Markov's Inequality Proof}
+\items{
+    \item Assume $f:\R\rightarrow[0,\infty)$ is non-decreasing.
+    \item $\pr{X\ge a}\le\frac{\E{f(X)}}{f(a)}$, for all $a$ such that $f(a)>0$
+    \item Observe that: $1\set{X\ge a}\le\frac{f(X)}{f(a)}$ because:
+    \items{
+        \item When $X>a$: 
+        \items{
+            \item Left side = 1
+            \item Right side > 1 because $f:\R\rightarrow[0,\infty)$ is non-decreasing
+        }
+        \item When $X=a$: 
+        \items{
+            \item Left side = 1
+            \item Right side = 1
+        }
+        \item When $X<a$: 
+        \items{
+            \item Left side = 0
+            \item Right side $\ge0$ because $f\ge0$.
+        }
+    }
+    \item Take expectation of both sides (because expectation is monotone): 
+    \items{
+        \item $\E{1\set{X\ge a}}\le\E{\frac{f(X)}{f(a)}}\implies\pr{X\ge a}\le\frac{\E{f(X)}}{f(a)}$
+    }
+}
+\eqs{
+\textbf{Markov's Inequality}\\
+$f:\R\rightarrow[0,\infty)$ is non-decreasing and for all $a$ such that $f(a)>0$
+\eq{\pr{X\ge a}\le\frac{\E{f(X)}}{f(a)}}
+}
+\textbf{Markov's Inequality Example $G(p)$:}
+\items{
+    \item Let $X=G(p), \E{X}=\frac{1}{p}, \E{X^2}=\frac{2-p}{p^2}$
+    \item Using $f(x)=x$: $\pr{X\ge a}\le\frac{\E{X}}{a}=\frac{1}{ap}$
+    \item Using $f(x)=x^2$: $\pr{X\ge a}\le\frac{\E{X^2}}{a^2}=\frac{2-p}{a^2p^2}$
+}
+\textbf{Markov's Inequality Example $P(\lambda)$:}
+\items{
+    \item Let $X=P(\lambda), \E{X}=\lambda, \E{X^2}=\lambda+\lambda^2$
+    \item Using $f(x)=x$: $\pr{X\ge a}\le\frac{\E{X}}{a}=\frac{\lambda}{a}$
+    \item Using $f(x)=x^2$: $\pr{X\ge a}\le\frac{\E{X^2}}{a^2}=\frac{\lambda+\lambda^2}{a^2}$
+}
+\textbf{Chebyshev's Inequality Proof}
+\items{
+    \item Let $Y=\abs{X-\E{X}}, f(y)=y^2$
+    \item Use Markov's Inequality: $\pr{Y\ge a}\le\frac{\E{f(Y)}}{f(a)}=\frac{\var{X}}{a^2}$
+    \item Confirms that the variance measures the "deviations from the mean"
+}
+\eqs{
+\textbf{Chebyshev's Inequality}\\
+For all $a > 0$
+\eq{\pr{\abs{X-\E{X}}>a}\le\frac{\var{X}}{a^2}}
+}
+\textbf{Chebyshev's Inequality Example $P(\lambda)$:}
+\items{
+    \item Let $X=P(\lambda), \E{X}=\lambda, \var{X}=\lambda$
+    \item $\pr{\abs{X-\lambda}>n}\le\frac{\lambda}{n^2}$
+}
+\textbf{Use Markov to get Chebyshev Bounds}
+\items{
+    \item Let $X=P(\lambda), \E{X}=\lambda, \E{X^2}=\lambda+\lambda^2, \var{X}=\lambda$
+    \item Using Markov's with $f(x)=x^2$: $\pr{X\ge a}\le\frac{\E{X^2}}{a^2}=\frac{\lambda+\lambda^2}{a^2}$
+    \item If $a>\lambda$, then $X\ge a\implies X - \lambda \ge a-\lambda > 0 \implies \abs{X-\lambda}\ge a-\lambda$
+    \item So, for $a>\lambda$, $\pr{X\ge a}\le\pr{\abs{X-\lambda}\ge a-\lambda}\le \frac{\lambda}{(a-\lambda)^2}$
+    
+}
+\textbf{Fraction of H's}
+\items{
+    \item How likely is it that the fraction of $H$'s differs from 50\%?
+    \item Let $X_m=1$ if the $m$th flip of a fair coin is $H$ and $X_m=0$ otherwise
+    \items{
+        \item Any type of polling system mimics this scenario
+        \item $\pr{H}=p$ Yes to poll question
+        \item $\pr{T}=1-p$ No to poll question
+    }
+    \item Define $Y_n=\frac{X_1+\cdots+X_n}{n}$, for $n\ge1$
+    \items{
+        \item Ratio of people who said yes to question
+    }
+    \item Estimate $\pr{\abs{Y_n-0.5}\ge0.1}=\pr{Y_n\le0.4\xs{or}Y_n\ge0.6}$
+    \items{
+        \item If poll result is $\ge$ 10\% away from the mean $\implies$ mistake
+    }
+     \item By Chebyshev: $\pr{\abs{Y_n-0.5}\ge 0.1}\le\frac{\var Y_n}{0.1^2}=100\var{Y_n}=\frac{25}{n}$
+    \items{
+        \item $\var{Y_n}=\frac{1}{n^2}(\var{X_1}+\var{X_2}+\cdots+\var{X_n})=\frac{n\var{X_i}}{n^2}=\frac{\var{X_i}}{n}\le\frac{1}{4n}$
+        \item Because all $X_i$'s are independent and the variance of a constant is its square.
+        \item As $\ninfty$, $Y_n\rightarrow0$
+        \item $\var{X_i}=p(1-p)\le(.5)(.5)=\frac{1}{4}$
+    }
+    \item For $n=1000$, $\pr{\abs{Y_n-0.5}\ge 0.1}\le2.5\%$
+}
+\eqs{
+\textbf{Law of Large Numbers}\\
+As $\ninfty$, $\pr{\abs{X-0.5}\ge \e}\rightarrow 0$\\
+\eq{\pr{\abs{T_n-0.5}\le\e}\rightarrow 1}
+\textbf{Weak Law of Large Numbers}
+\eq{\pr{\abs{\frac{X_1+\cdots+X_n}{n}-\mu}\ge\e}\rightarrow 0,\xs{as}\ninfty}
+}
+%%%% Topic %%%%
+\subsection*{Weak Law of Large Numbers}
+%%%% Notes %%%%
+\textbf{Proof}
+\items{
+    \item Let $Y_n=\frac{X_1+\cdots+X_n}{n}$
+    \item $\pr{\abs{Y_n-\mu}\ge\e}\le\frac{\var{Y_n}}{\mu^2}=\frac{\var{X_1+\cdots+X_n}}{n^2\e^2}=\frac{\var{X_i}}{n\e^2}\rightarrow0,\xs{as}\ninfty$
+}
+%%%% Topic %%%%
+\subsection*{Summary}
+%%%% Notes %%%%
+\eqs{
+\textbf{Variance}
+\eq{\var{X}=\E{(X-\E{X})^2}=\E{X^2}-\E{X}^2}
+\textbf{Fact}
+\eq{\var{aX+b}=a^2\var{X}}
+\textbf{Sum}
+\eq{X,Y,Z,\ldots\xs{mutually independent}\implies\var{X+Y+Z+\cdots}=\var{X}+\var{Y}+\var{Z}+\cdots}
+\textbf{Markov}\\
+$f: \R \rightarrow [0, \infty)$ is non-decreasing and for all $a$ such that $f(a) > 0$
+\eq{\pr{X\ge a}\le\frac{\E{f(X)}}{f(a)}}
+\textbf{Chebyshev}\\
+For all $a > 0$
+\eq{\pr{\abs{X-\E{X}}\ge a}\le\frac{\var{X}}{a^2}}
+\textbf{Weak Law of Large Numbers}
+\eq{X_m\xs{i.i.d}\implies\frac{X_1+\cdots+X_n}{n}\approx\E{X}}
+}
+\end{document}

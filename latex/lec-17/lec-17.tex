@@ -1,0 +1,147 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow, listings}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}\newcommand{\x}[1]{\textrm{ #1 }}\newcommand{\pr}{\textrm{Pr}}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+
+\title{CS70 - Lecture 17 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Review}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Example: $B \subset A \Rightarrow A \x{and} B$ are positively correlated
+    \begin{itemize}
+        \item $\pr[A|B]=1>\pr[A]\x{  and  }\pr[A \cap B]=\pr[B]>\pr[A]\pr[B]$
+    \end{itemize}
+    \item Example: $A \subset B = \emptyset \Rightarrow A \x{and} B$ are negatively correlated
+    \begin{itemize}
+        \item $\pr[A|B]=0<\pr[A]\x{  and  }\pr[A \cap B]=0<\pr[A]\pr[B]$
+    \end{itemize}
+    \item For uniformly distributed probability space $\Omega$, $\pr[A]=\frac{|A|}{|\Omega|}$
+\end{itemize}
+\begin{mdframed}
+\textbf{Probability of A given B:}
+\begin{equation}\pr[A|B]=\frac{\pr[A\cap B]}{\pr[B]}\end{equation}
+\textbf{Probability of A and B (intersection):}
+\begin{equation}\pr[A\cap B]=\pr[B]\pr[A|B]=\pr[A]\pr[B|A]\end{equation}
+\textbf{A and B are positively correlated if:}
+\begin{equation}\pr[A|B]>\pr[A]\x{  ,  }\pr[A\cap B]>\pr[A]\pr[B]\end{equation}
+\textbf{A and B are negatively correlated if:}
+\begin{equation}\pr[A|B]<\pr[A]\x{  ,  }\pr[A\cap B]<\pr[A]\pr[B]\end{equation}
+\textbf{A and B are independent iff:}
+\begin{equation}\pr[A|B]=\pr[A]\x{  ,  }\pr[A\cap B]=\pr[A]\pr[B]\end{equation}
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Find prior probability given some observation $B$ ($A$ given $B$)}
+%%%% Notes %%%%
+\begin{enumerate}[1.]
+    \item Total probability of $B$ given prior probabilities
+    \begin{itemize}
+        \item \textbf{Law of Total probability}
+        \item $\pr[B] = \pr[A_1]\pr[B|A_1] +\cdots + \pr[A_n]\pr[B|A_n]$
+    \end{itemize}
+    \item Find $\pr[A|B]$
+    \begin{itemize}
+        \item \textbf{Bayes Rule}
+        \item $\pr[A|B]=\frac{\pr[A]\pr[B|A]}{\pr[B]}$
+    \end{itemize}
+\end{enumerate}
+\begin{mdframed}
+\textbf{Terms}
+\begin{itemize}
+    \item \textbf{Most likely A Posteriori (MAP) of $B$}: The $A_m$ that gives the highest $\pr[A_m]\pr[B|A_m]$
+    \item \textbf{Maximum Likelihood Estimate (MLE) of $B$}: The $A_m$ that gives the highest $\pr[B|A_m]$
+\end{itemize}
+\end{mdframed}
+\textbf{Mutual Independence}
+\begin{itemize}
+\item A subset of events $A_1,..., A_k$ where $A_k, k \in J$ are \textbf{mutually independent} if the probability that they all occur is equal to the product of their individual probabilities
+\end{itemize}
+\begin{mdframed}
+\textbf{Mutual Independence}\\
+\textbf{Definition}
+\begin{equation}\pr[\cap_{k \in K}A_k]=\prod\limits_{k \in K}\pr[A_k], \x{for all finite} K \subseteq J\end{equation}
+\textbf{Theorem}
+\begin{itemize}
+    \item If the events $\{A_j, j \in J\}$ are mutually independent, and if $K_n$ are pairwise disjoint finite subsets of $J$, then all the events $\cap_{k\in K_n}A_k$ are independent (same is true if we replace some of the $A_k$ by $\bar{A}_k$
+\end{itemize}
+\end{mdframed}
+
+\begin{mdframed}
+\textbf{Collision Calculation}\\
+Let $m$ = no. of elements, $n$= no. of bins, $C$ = collision
+\begin{equation}\pr[\bar{C}]\approx e^{(-\frac{m^2}{2n})}\end{equation}
+When $m=1.2\sqrt{n}$
+\begin{equation}\pr[C]\approx \frac{1}{2}\end{equation}
+\end{mdframed}
+\begin{mdframed}
+\textbf{Collision Derivation}\\
+If $A_i=$ no collision when the $i$th ball is placed in a bin
+\begin{equation}\pr[A_i|A_{i-1}\cap\cdots\cap A_1]=1-\frac{i-1}{n}\end{equation}
+No collisions = $A_1\cap\cdots\cap A_m$\\
+Product Rule:
+\begin{equation}\pr[A_1\cap\cdots\cap A_m]=\pr[A_1]\pr[A_2|A_1]\cdots\pr[A_m|A_1\cap\cdots\cap A_{m-1}]\end{equation}
+Apply to $\pr[\bar{C}]$:
+\begin{equation}\pr[\bar{C}]=(1-\frac{1}{n})\cdots(1-\frac{m-1}{n})\end{equation}
+Natural log of both sides:
+\begin{equation}\ln{(\pr[\bar{C}])}=\sum\limits_{k=1}^{m-1}\ln{(1-\frac{k}{n})}\approx \sum\limits_{k=1}^{m-1}\ln{(-\frac{k}{n})}^*=(-\frac{1}{n})(\frac{m(m-1)}{2})\approx -\frac{m^2}{2n}\end{equation}
+* Use property that $\ln(1-\varepsilon)\approx-\varepsilon \x{for} |\varepsilon| <<1$\\
+Gauss Summation: $1+2+\cdots+m-1=\frac{m(m-1)}{2}$
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Example: Checksums}
+%%%% Notes %%%%
+\begin{itemize}
+    \item $m=$ no. of files,  $b=$ no. of bits in the checksum,  $C=$ files share a checksum
+    \item Find $b$ s.t. $\pr[C] \le 10^{-3}$
+    \begin{itemize}[*]
+        \item $\pr[C]\approx 1-e^{(-\frac{m^2}{2(2^b)})}$
+        \item $b=\frac{\ln(-\frac{m^2}{2\ln(1-10^{-3})})}{\ln(2)}=2.9\ln(m)+9$
+    \end{itemize}
+    \item $\therefore\, b \ge 2.9\ln(m)+9$
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Probability of Getting $n_i$ out of $n$ with $m$ picks}
+%%%% Notes %%%%
+\begin{itemize}
+\item Define event of failure $A_m$ (not success)
+\item Determine probability of failing on each iteration of $m$
+    \begin{itemize}
+    \item $\pr[A_i|A_{i-1}\cap\cdots\cap A_1]= 1-\pr[\bar{A_i}]$ for $i=\{1,...,m\}$)
+    \item If not intuitive, try brute force and find a pattern for each $\pr[A_i]$
+    \end{itemize}
+\item Use Product Rule to get $\pr[A_m]$
+    \begin{itemize}
+    \item $\pr[A_1\cap\cdots\cap A_m]=\pr[A_1]\pr[A_2|A_1]\cdots\pr[A_m|A_1\cap\cdots\cap A_{m-1}]$
+    \item If events are \textbf{independent} $\pr[A_1\cap\cdots\cap A_m]=\pr[A_1]\pr[A_2]\cdots\pr[A_m|A_{m-1}]$
+    \end{itemize}
+\item Take natural log of both sides and simplify using the property that $\ln(1-\varepsilon)\approx-\varepsilon \x{for} |\varepsilon| <<1$
+\item Raise $e$ to the power of both sides ($e^n$) to derive approximate solution for $\pr[A_m]$
+    \begin{itemize}
+    \item $\pr[A_m]\approx e^{expression}$
+    \end{itemize}
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Probability of Complete Collection}
+%%%% Notes %%%%
+\begin{itemize}
+\item Define event of failure of one iteration $E_k$
+\begin{itemize}
+\item $E_k$ for $k=\{1,...,n\}$
+\item Derive $\pr[E_k]$ using method above: \textbf{Probability of Getting $n_i$ out of $n$ with $m$ picks}
+\end{itemize}
+\item find probability of failing any iteration (or/union)
+\begin{itemize}
+\item $p := \pr[E_1\cup E_2\cup\cdots\cup E_n]$
+\end{itemize}
+\item Estimate $p$ using Union Bound
+\begin{itemize}
+\item $p := \pr[E_1\cup E_2\cup\cdots\cup E_n]\le \pr[E_1]+\pr[E_2]+\cdots+\pr[E_n]$
+\end{itemize}
+\item Plug in $\pr[E_k]$ expression derived above to find $\pr[\x{failure of at least one iteration}] \le expression$
+\item Use expression to derive minimum value of $m$ to get a certeain $\pr[miss]$ s.t. $\pr[miss]\le p$
+\end{itemize}
+\end{document}

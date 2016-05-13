@@ -1,0 +1,245 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}\newcommand{\x}[1]{\textrm{#1}}\newcommand{\pr}{\textrm{Pr}}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\renewenvironment{leftbar}[2][\hsize]
+{
+    \def\FrameCommand
+    {
+        {\color{#2}\vrule width 3pt}
+        \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{#1}}
+
+\title{CS70 - Lecture 19 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Page 1 %%%%
+
+%%%% Topic %%%%
+\subsection*{Random Variables}
+%%%% Notes %%%%
+\simple{Real number values assigned to each outcome}
+\begin{itemize}
+    \item \textbf{Definition:} A function $X$ that assigns a real number $X(\w)$ to each $\w \in \Om$
+    \item Set of outcomes s.t. the RV assigned to that outcome $X(\w)$ is some value $a \in \R$
+    \begin{itemize}
+        \item Defined as the inverse image of number (RV) $a$ under the function $X$.
+        \item Ex: Two dice roll, RV = total of both dice = 4 (3 possible outcomes)  $X^{-1}(4)=\set{(1,3),(2,2),(3,1)}$
+    \end{itemize}
+    \item Set of outcomes s.t. the RV to that outcome $X(\w)$ is some value in $A \in \R$
+    \item Probability that RV $X=a$ is the same as the probability of getting an outcome that maps to $a$
+    \item The \textbf{distribution} of RV $X$ is the set of possible RV values paired with their respective probabilities.
+\end{itemize}
+\textbf{Distribution}
+\simple{All coordinate pairs of $X$ $(\x{RV}, \pr[\x{RV}])$}
+\textbf{Combining Random Variables}
+\begin{itemize}
+    \item Let $X,Y,Z$ be RVs on $\Om$ and function $g: \R^3 \mapsto \R$
+    \item $g(X,Y,Z)$ = RV that assigns value $g(X(\w), Y(\w), X(\w))$ to $\w$
+    \item Ex: Three dice roll; $X, Y, Z$ = values of each die; $g(X,Y,Z)$ = max value of $X,Y,Z$
+\end{itemize}
+\begin{mdframed}
+\textbf{Set of outcomes s.t. the RV assigned to that outcome $X(\w)$ is some value $a \in \R$:}\\
+\eq{X^{-1}(a) := \set{\w \in \Om | X(\w)=a}}
+\textbf{Set of outcomes s.t. the RV to that outcome $X(\w)$ is some value in $A \in \R$:}
+\eq{X^{-1}(A) := \set{\w \in \Om | X(\w)=A, A \in \R}}
+\textbf{Probability that RV $X=a$ is the same as the probability of getting an outcome that maps to $a$:}
+\eq{\pr[X=a]=\pr[X^{-1}(a)] \x{ and } \pr[X=A]=\pr[X^{-1}(A)]}
+\textbf{Distribution}
+\eq{\set{(a,\pr[X=a]):a \in \scr{A}} \x{ where } \scr{A} = \set{X(\w), \w \in \Om}}
+\end{mdframed}
+\pagebreak
+
+%%%% Page 2 %%%%
+
+%%%% Topic %%%%
+\subsection*{Expectation}
+%%%% Notes %%%%
+\simple{\begin{enumerate}[1.]
+    \item Multiply each RV in the distribution of $X$ with its respective probability
+    \item Sum all products
+\end{enumerate}}
+\begin{itemize}
+    \item \textbf{Definition:} the \textbf{expected value} (meanor expectation) of a random variable $X$
+    \item Not a common value: Expected value may not be a possible value of $X$
+\end{itemize}
+\textbf{Law of Large Numbers}
+\simple{Expectation = average value per experiment if it is performed many times}
+\eqs{
+\textbf{Expected Value:}
+\eq{E[X]=\sumlim{a}{}{a\times \pr[X=a]}}
+\textbf{Thm: Can sum over outcomes instead of RVs}
+\eq{E[X]=\sumlim{\w}{}{X(\w)\times \pr[\w]}}
+\textbf{Law of Large Numbers: When $n >> 1$}
+\eq{E[X]= \frac{X_1+\cdots+X_n}{n}}
+}
+%%%% Topic %%%%
+\subsection*{Indicators}
+%%%% Notes %%%%
+\simple{Random variable that is 1 when $\w$ is in desired event $A$ and 0 otherwise}
+\begin{itemize}
+    \item \textbf{Definition:} Let $A$ = event; \textbf{Indicator} of event $A$ = RV $X$:
+    $$X=
+    \begin{cases}
+        1, & \xs{if} \w \in A \\
+        0, & \xs{if} \w \not\in A
+    \end{cases}$$
+\end{itemize}
+\eqs{
+\textbf{Expectation of Indicator}
+\eq{E[X] = 1 \times \pr[X=1]+0 \times \pr[X=0]=\pr[A]}
+\textbf{Alternative form of indicator}
+\eq{X(\w) = 1\set{\w \in A} \x{ or } 1_A(\w)}
+\eq{X=1_A}
+}
+\pagebreak
+%%%% Topic %%%%
+\subsection*{Linearity of Expectation}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Expectation is linear
+\end{itemize}
+\textbf{Examples}
+\simple{
+\textbf{Roll dice $n$ times}
+\begin{itemize}
+    \item $X_m$ = number of dots on roll $m$; $X = X_1 + \cdots + X_n$ = total number of dots after $n$ rolls
+    \item $E[X]=E[X_1+\cdots+X_n]$
+    \item $= E[X_1]+\cdots+E[X_n]$ (by linearity)
+    \item $= nE[X_1]$ because all $X_m$ have the same distribution
+    \item $E[X_1]=1\times\frac{1}{6}+\cdots+6\times\frac{1}{6}=\frac{6 \times 7}{2}\times\frac{1}{6}=\frac{7}{2}$
+\end{itemize}
+}
+\simple{
+\textbf{Flip $n$ coins with heads prob. = $p$ and RV $X$ = no. of heads}
+\begin{itemize}
+    \item Hard method:
+    \begin{itemize}
+        \item $\pr[X=i]=\binom{n}{i}p^i(1-p)^{n-i}$
+        \item $E[X]=\sumlim{i}{}{i\times \pr[X=i]}=\sumlim{i}{}{i\times \binom{n}{i}p^i(1-p)^{n-i}}$
+    \end{itemize}
+    \item Linearity Method:
+    \begin{itemize}
+        \item Used $X_i$ as an indicator: 1 if $i$th flip is heads, 0 otherwise
+        \item $E[X_i]=1\times\pr[H]+0\times\pr[T]=p$
+        \item $X=X_1+\cdots+X_n$
+        \item $E[X]=E[X_1]+E[X_2]+\cdots+E[X_n]=n\times E[X_i]=np$
+    \end{itemize}
+\end{itemize}
+}
+\eqs{
+\textbf{Linear Expectation}
+\eq{E[a_1X_1+\cdots+a_nX_n]=a_1E[X_1]+\cdots+a_nE[X_n]}
+\textbf{Union of Indicators}
+\eq{1_{A\cup B}(\w)=1_A(\w)+1_B(\w)-1_{A\cap B}(\w)}
+\textbf{Probability of Event = Expected value of Indicator RV}
+\eq{\pr[A]=E[1_A]}
+}
+%%%% Topic %%%%
+\subsection*{Calculating E[g(x)]}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Let $Y=g(X)$. Assume we know the distribution of $X$
+    \item Method 1 \textbf{(bad)}: Calculate distribution of $Y$
+    \begin{itemize}
+        \item $\pr[Y=y]=\pr[X\in g^{-1}(y)] \xs{where} g^{-1}(x)=\set{x\in \R: g(x)=y}$
+    \end{itemize}
+    \item Method 2 \textbf{(good)}: Use following Theorem
+    \begin{itemize}
+        \item $E[g(X)]=\sumlim{x}{}{g(x)\pr[X=x]}$
+    \end{itemize}
+\end{itemize}
+\textbf{Method 2 Example}
+\simple{
+Let $X$ be uniform in $\set{-2,-1,0,1,2,3}; g(X)=X^2$\\
+$E[g(X)]=\sumlim{x=-2}{3}{x^2\frac{1}{6}}=\frac{19}{6}$
+}
+\eqs{
+\textbf{Calculate E[g(X)]}
+\eq{E[g(X)]=\sumlim{x}{}{g(x)\pr[X=x]}}
+\textbf{Calculate E[g(X,Y,Z)]}
+\eq{E[g(X,Y,Z)]=\sumlim{x,y,z}{}{g(X,Y,Z)\pr[X=x,Y=y,Z=z]}}
+}
+%%%% Topic %%%%
+\subsection*{Least Squares}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item Least Squares: $(X-a)^2$ is used to denote the amount of error
+    \item $a=E[X]$ minimizes $E[(X-a)^2]$, so it is a god guess for $X$
+\end{enumerate}
+}
+\begin{itemize}
+    \item \textbf{Thm:} The value of $a$ that minimizes $E[(X-a)^2]$ is $a=E[X] \therefore$ if you only know the distribution of $X$, $E[X]$ is a good guess for $X$
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Least Absolute Deviation}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item Least Absolute Deviation: $|X-a|$ is used to denote the amount of error
+    \item $a=\xs{median of}X$ minimizes $E[|X-a|]$, so it is a god guess for $X$
+\end{enumerate}
+}
+\begin{itemize}
+    \item \textbf{Thm:} The value of $a$ that minimizes $E[|X-a|]$ is $a=\xs{median of}X \therefore$ if you only know the distribution of $X$, the median of $X$ is a good guess for $X$
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Monotonicity}
+%%%% Notes %%%%
+\simple{Mean value of a bigger RV is bigger than the mean value of a smaller RV}
+\begin{itemize}
+    \item Let $X,Y$ be 2 RVs on $\Om$
+    \item $X \le Y$ is $X(\w)$ is always less than $Y(\w)$ for all $\w \in \Om$, vice verse for $X\ge Y$
+    \item $X \ge a$ for some constant a if $X(\w)$ is always greater than $a$
+    \item \textbf{Facts}
+    \begin{itemize}
+        \item $X \ge 0 \Rightarrow E[X] \ge 0$
+        \item $X \le Y \Rightarrow E[X] \le Y$
+    \end{itemize}
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Uniform Distribution}
+%%%% Notes %%%%
+\simple{RV $X$ is equally likely to take on any of its values}
+\begin{itemize}
+    \item $X$ is uniformly distributed in $\set{1,2,\cdots,n} \xs{if} \pr[X=m]=\frac{1}{n} \xs{for} m=1,2,3\cdots,n$
+    \item $E[X]=\sumlim{m=1}{n}{m\pr[X=m]}=\sumlim{m=1}{n}{m\times \frac{1}{n}}=\frac{1}{n}\frac{n(n+1)}{2}=\frac{n+1}{2}$
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Geometric Distribution}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item Flip a coin with $\pr[H]=p$ until you get $H$
+    \item Geom. Dist. w/ Parameter $p$: $\pr[X=n]=(1-p)^{n-1}p, n \ge 1$
+    \item Mean value $E[X]$ will increase as $p$ become \textbf{smaller} and vice versa
+\end{enumerate}
+}
+\begin{itemize}
+    \item Flip a coin with $\pr[H]=p$ until you get $H$
+    \item Let $X$ = no. of flips until first $H$
+    \item $X(\w_n)=n$
+    \item $\pr[X=n]=(1-p)^{n-1}p, n \ge 1$
+\end{itemize}
+\eqs{
+\textbf{Geometric Distribution w/ Parameter $p$:}
+\eq{\pr[X=n]=(1-p)^{n-1}p, n \ge 1}
+\textbf{Sum of Geometric Series:}
+\eq{\x{if }|a|<1, S:=\sumlim{n=0}{\infty}{a^n}=\frac{1}{1-a}}
+}
+\end{document}

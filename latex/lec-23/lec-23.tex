@@ -1,0 +1,213 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend}
+\usepackage[shortlabels]{enumitem}
+\usepackage[nobreak=true]{mdframed}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}
+\renewenvironment{leftbar}[2][\hsize]{
+\def\FrameCommand
+{
+    {\color{#2}\vrule width 3pt}
+    \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newtheorem*{prop}{Proposition}
+\renewcommand{\theenumi}{\alph{enumi}}
+\newtheorem{theorem}{Theorem}
+\newcommand*{\QEDB}{\hfill\ensuremath{\square}}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\pr}[1]{\textrm{Pr}[#1]}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dpic}[1]{\begin{center}\includegraphics[width=0.5\textwidth]{#1}\end{center}}
+\newcommand{\dpicl}[1]{\\\includegraphics[width=0.5\textwidth]{#1}\\}
+\newcommand{\tpic}[1]{\begin{center}\includegraphics[width=0.33\textwidth]{#1}\end{center}}
+\newcommand{\wpic}[1]{\begin{center}\includegraphics[width=0.8\textwidth]{#1}\end{center}}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqx}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{\begin{enumerate}[1.]#1\end{enumerate}}}
+\newcommand{\ex}[1]{\easy{blue}{#1}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\items}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\itemss}[2]{\begin{itemize}[#1]#2\end{itemize}}
+\newcommand{\rng}[2]{#1,\ldots,#2}
+\newcommand{\E}[1]{E[#1]}
+\newcommand{\var}[1]{\x{Var}[#1]}
+\newcommand{\e}{\varepsilon}
+\newcommand{\limty}{\lim_{n\rightarrow\infty}}
+\newcommand{\ninfty}{n\rightarrow\infty}
+\newcommand{\cov}{\x{cov}}
+\newmdenv[topline=false, rightline=false, bottomline=false,%
+  linewidth=3pt, innerrightmargin=0pt, leftmargin=4pt,%
+  innerleftmargin=5pt, skipabove=5pt, skipbelow=5pt]{mdleftbar}
+
+\title{CS70 - Lecture 23 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Review: LLSE and LR}
+%%%% Notes %%%%
+\eqs{
+Let $X$ and $Y$ be RVs on $\Omega$\\
+\textbf{Covariance}
+\eq{\cov(X,Y) = \E{XY}-\E{X}\E{Y}}
+\textbf{LLSE} (Given Distribution of $X$)
+\eq{L[Y|X] = \E{Y}+\frac{cov(X,Y)}{\var{X}}(X-\E{X}) = a+bX \xs{where} a,b \xs{minimizes} \E{(Y -a-bX)^2}}
+\textbf{Mean Squared Error of LLSE} (Given Distribution of $X$)
+\eq{\E{(Y-L[Y|X])^2} = \var{Y}-\frac{\cov(X,Y)^2}{\var{X}}}
+\textbf{Non-Bayesian (LR)}\\
+Calculate each component of $L[Y|X]$\\
+Given samples ($X_1,Y_1$),\ldots,($X_K ,Y_K$), no distribution\\
+Define RVs ($X,Y$) s.t. $\pr{(X,Y)=(X_k,Y_k)}=\frac{1}{K},k=1,\ldots, K$\\
+\eq{\E{X} =\frac{1}{K}\sumlim{k=1}{K}X_k
+,\,\E{Y} =\frac{1}{K}\sumlim{k=1}{K}Y_k
+,\,\E{X^2} =\frac{1}{K}\sumlim{k=1}{K}X_k^2
+,\,\E{XY} =\frac{1}{K}\sumlim{k=1}{K}X_kY_k
+}
+\eq{\cov(X,Y) = \E{XY}-\E{X}\E{Y}}
+\eq{\var{X} = \E{X^2}-\E{X}^2}
+}
+\simple{
+    \item LR line goes through ($\E{X},\E{Y}$)
+    \item Slope is $\frac{cov(X,Y)}{\var{X}}$
+}
+%%%% Topic %%%%
+\subsection*{Conditional Expectation}
+%%%% Notes %%%%
+\simple{
+    \item $\E{Y|X}$ is the best guess about $Y$ given $X$
+}
+\items{
+    \item Let $X$ and $Y$ be RVs on $\Omega$. The conditional expectation of $Y$ given $X$ is defined as $\E{Y|X} = g(X)$
+    \items{
+        \item where $g(x) = \E{Y|X = x} = \sumlim{y}{}{y\pr{Y = y|X = x}}$,
+        \item with $\pr{Y = y|X = x} =\frac{\pr{X=x,Y =y}}{\pr{X=x}}$
+        \item Theorem: $\E{Y|X}$ is the best guess about $Y$ given $X$
+        \item That is, for any function $h()$, one has $\E{(Y -h(X))^2} \ge \E{(Y -\E{Y|X})^2}$
+    }
+}
+\eqs{
+\textbf{Conditional Expectation:} $\E{Y|X}$ is the best guess about $Y$ given $X$\\
+Given $\pr{Y = y|X = x} =\frac{\pr{X=x,Y =y}}{\pr{X=x}}$
+\eq{\E{Y|X} = \E{Y|X = x} = \sumlim{y}{}{y\pr{Y = y|X = x}}}
+}
+\textbf{Calculating E[Y|X]}
+\items{
+    \item Linearity also applies to E[Y|X]
+    \item Calculate $\E{2+5X+7XY+11X^2+13X^3Z^2|X}$ assuming $X,Y,Z$ are i.i.d with mean 0 and variance 1.
+    \item Solve for $\E{Y|X}=g(X)$
+    \items{
+        \item $=2+5X+7X\E{Y|X}+11X^2+13X^3\E{Z^2|X}$
+        \item $= 2+5X +7X\E{Y} +11X^2 +13X^3\E{Z^2}$
+        \item $= 2+5X +11X^2 +13X^3(\var{Z}+\E{Z}^2)$
+        \item $= 2+5X +11X^2 +13X^3$
+    }
+}
+%%%% Topic %%%%
+\subsection*{Projection Property}
+%%%% Notes %%%%
+\items{
+    \item \textbf{Claim:} $\E{(Y -\E{Y|X})f(X)} = 0,\forall f()$ in other words, $\E{Yf(X)} = \E{\E{Y|X}f(X)}$
+    \item In particular, choosing f(x) = 1, we get $\E{Y} = \E{\E{Y|X}}$
+    \item \textbf{Proof:} $\E{\E{Y|X}f(X)} =$
+    \items{
+	    \item $\sumlim{x}{}{\E{Y|X = x}f(x)Pr{X = x}}$
+	    \item $= \sumlim{x}{}{\sumlim{y}{}{yf(x)\pr{Y = y|X = x}}Pr{X = x}}$
+	    \item $= \sumlim{x}{}{\sumlim{y}{}{yf(x)\pr{X = x,Y = y}}}= \E{Yf(X)}$
+    }
+}
+\eqs{
+\textbf{Projection Property}
+\eq{\E{Yf(X)} = \E{\E{Y|X}f(X)}}
+\textbf{Smoothing Property}
+\eq{\E{Y} = \E{\E{Y|X}}}
+}
+\textbf{Conditional Probability Application}
+\simple{
+    \item \textbf{Find $\E{X}$:}
+    \item Use formula: $\E{Y|X} = \sumlim{y}{}{y\pr{Y = y|X = x}}$ and given values for $Y=y$ and $X=x$ to solve for $\E{Y|X}$ in terms of $X$
+    \item Use fact that $\E{Y} = \E{\E{Y|X}}$ and previous value to solve for $\E{Y}$ in terms of $\E{X}$
+    \item Use algebra to solve for $\E{X}$
+}
+\items{
+    \item Given, $X_n=m$, $X_{n+1}=m-1$ w.p. $\frac{m}{N}$ (picks red ball) and $X_{n+1}=m$ otherwise
+    \items{
+        \item $\E{X_{n+1}|X_n=m}=m-\frac{m}{N}=m\frac{N-1}{N}=X_n\rho$ w. $\rho=\frac{N-1}{N}$
+        \item So, $\E{X_{n+1}} = \E{\E{X_{n+1}|X_n}} = \rho\E{X_n},n \ge 1 \implies \E{X_n} = \rho^{n-1}\E{X_1} = N(\frac{N-1}{N})^{n-1},n \ge 1$
+    }
+}
+%%%% Topic %%%%
+\subsection*{Application: Going Viral}
+%%%% Notes %%%%
+\items{
+    \item \textbf{Fact:} Let $X = \sumlim{n=1}{\infty}{X_n}$. Then, $\E{X} < \infty$ iff $pd < 1$
+    \item \textbf{Proof:}
+    \item Given $X_n = k, X_{n+1} = B(kd,p)$. Hence, $\E{X_{n+1}|X_n = k} = kpd$
+    \item Thus, $\E{X_{n+1}|X_n} = pdX_n$. Consequently, $\E{X_n} = (pd)^{n-1},n \ge 1$.
+    \item If $pd < 1$, then $\E{X_1+\cdots+X_n} \le (1-pd)-1 \implies \E{X} \le (1-pd)-1$
+    \item If $pd \ge 1$, then for all $C$ one can find $n$ s.t. $\E{X} \ge \E{X_1+\cdots+X_n} \ge C$.
+    \item In fact, one can show that $pd \ge 1 \implies \pr{X = \infty} > 0$
+}
+%%%% Topic %%%%
+\subsection*{Wald's Identity}
+%%%% Notes %%%%
+\items{
+    \item Assume that $X_1,X_2,\ldots$ and $Z$ are independent, where $Z$ takes values in $\set{0,1,2,\ldots}$
+    \item and $\E{X_n} = \mu$ for all $n \ge 1$
+    \item Then, $\E{X_1 +\cdots+X_Z } = \mu\E{Z}$
+    \item \textbf{Proof:}
+    \items{
+        \item $\E{X_1 +\cdots+X_Z |Z = k} = \mu k$
+        \item Thus, $\E{X_1 +\cdots+X_Z |Z} = \mu Z$
+        \item Hence, $\E{X_1 +\cdots+X_Z } = \E{\mu Z} = \mu \E{Z}$
+    }
+}
+\eqs{
+\textbf{Wald's Identity}\\
+If $X_1,X_2,\ldots$ and $Z$ are independent, where $Z \in \set{0,1,2,\ldots}$ and $\E{X_n} = \mu, \forall n \ge 1$
+\eq{\E{X_1 +\cdots+X_Z } = \mu\E{Z}}
+}
+%%%% Topic %%%%
+\subsection*{Conditional Expectation Best Guess (CE=MMSE)}
+%%%% Notes %%%%
+\simple{
+    \item $\E{Y|X}$ is the ‘best’ guess about $Y$ based on $X$.
+    \item Specifically, it is the function $g(X)$ that minimizes $\E{(Y-g(X))^2}$
+}
+\items{
+    \item \textbf{Thm:} $CE = MMSE$
+    \items{
+        \item $g(X) = \E{Y|X}$ is the function of $X$ that minimizes $\E{(Y-g(X))^2}$
+    }
+    \item \textbf{Proof:}
+    \items{
+        \item Let $h(X)$ be any function of $X$.
+        \item Then $\E{(Y-h(X))^2} = \E{(Y-g(X) +g(X)-h(X))^2}$
+        \item $= \E{(Y-g(X))^2} +\E{(g(X)-h(X))^2}+2\E{(Y-g(X))(g(X)-h(X))}$
+        \item But, $\E{(Y-g(X))(g(X)-h(X))} = 0$ by the projection property.
+        \item Thus, $\E{(Y-h(X))^2} \ge \E{(Y-g(X))^2}$
+    }
+}
+%%%% Topic %%%%
+\subsection*{Summary}
+%%%% Notes %%%%
+\simple{
+    \item $\E{Y}$ Best single guess for $Y$
+    \item $L[Y|X]$ Linear Least Squares Guess for $Y$ given $X$
+    \item $\E{Y|X}$ Best Estimate of $Y$ given $X$
+}
+\end{document}

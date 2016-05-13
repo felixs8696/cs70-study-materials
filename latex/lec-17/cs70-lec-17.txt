@@ -1,0 +1,107 @@
+CS70 Lecture 17
+For uniformly distributed probability space $\Omega$, $\pr[A]=\frac{|A|}{|\Omega|}$
+
+Find prior probability given some observation $B$ ($A$ given $B$)
+1. Total probability of $B$ given prior probabilities
+Law of Total probability
+$\pr[B] = \pr[A_1]\pr[B|A_1] +\cdots + \pr[A_n]\pr[B|A_n]$
+
+2. Find $\pr[A|B]$
+Bayes Rule
+$\pr[A|B]=\frac{\pr[A]\pr[B|A]}{\pr[B]}$
+
+\textbf{Most likely A Posteriori (MAP) of $B$}: The $A_m$ that gives the highest $\pr[A_m]\pr[B|A_m]$
+\textbf{Maximum Likelihood Estimate (MLE) of $B$}: The $A_m$ that gives the highest $\pr[B|A_m]$
+
+\textbf{Mutual Independence}
+\begin{itemize}
+\item A subset of events $A_1,..., A_k$ where $A_k, k \in J$ are \textbf{mutually independent} if the probability that they all occur is equal to the product of their individual probabilities
+\end{itemize}
+\begin{mdframed}
+\textbf{Mutual Independence}
+Definition
+\begin{equation}\pr[\cap_{k \in K}A_k]=\prod\limits_{k \in K}\pr[A_k], \x{for all} finite K \subseteq J\end{equation}
+Theorem
+\begin{itemize}
+If the events $\{A_j, j \in J\}$ are mutually independent, and if $K_n$ are pairwise disjoint finite subsets of $J$, then all the events $\cap_{k\in K_n}A_k$ are independent (same is true if we replace some of the $A_k$ by $\bar{A}_k$
+\end{itemize}
+\end{mdframed}
+
+\begin{mdframed}
+\textbf{Balls in Bins}
+Let $m$ = no. of balls, $n$= no. of bins, $C$ = collison
+\begin{equation}\pr[\bar{C}]\approx exp(-\frac{m^2}{2n})\end{equation}
+When $m=\sqrt{n}$
+\begin{equation}\pr[C]\approx \frac{1}{2}\end{equation}
+\end{mdframed}
+
+Let $A_i=$ no collision when the $i$-th ball is placed in a bin
+\end{mdframed}
+
+\begin{mdframed}
+\textbf{Collision Calculation}\\
+If $A_i=$ no collision when the $i$th ball is placed in a bin
+\begin{equation}\pr[A_i|A_{i-1}\cap\cdots\cap A_1]=1-\frac{i-1}{n}\end{equation}
+No collisions = $A_1\cap\cdots\cap A_m$
+Product Rule:
+\begin{equation}\pr[A_1\cap\cdots\cap A_m]=\pr[A_1]\pr[A_2|A_1]\cdots\pr[A_m|A_1\cap\cdots\cap A_{m-1}]\end{equation}
+\end{mdframed}
+
+%%%% Topic %%%%
+\subsection*{Checksums)}
+%%%% Notes %%%%
+\begin{itemize}
+\item $m=$ no. of files
+\item $b=$ no. of bits in the checksum
+\item $C=$ files share a checksum
+\item Find $b$ s.t. $\pr[C] \le 10^{-3}$
+\begin{itemize}
+\item $\pr[C]\approx 1-e^{(-\frac{m^2}{2(2^b)})}$
+\item $-(2)(2^b)\ln(1-10^{-3}) = m^2$
+\item $\ln(2^b)=\ln(-\frac{m^2}{2\ln(1-10^{-3})})$
+\item $b=\frac{\ln(-\frac{m^2}{2\ln(1-10^{-3})})}{\ln(2)}$
+\end{itemize}
+\end{itemize}
+
+%%%% Topic %%%%
+\subsection*{Probability of Getting $n_i$ out of $n$ with $m$ picks}
+%%%% Notes %%%%
+\begin{itemize}
+\item Define event of failure $\A_m$ (not success)
+\item Determine probability of failing on each iteration of $m$
+\begin{itemize}
+\item $\pr[A_i|A_{i-1}\cap\cdots\cap A_1]= 1-\pr[\bar{A_i}]$ for $i=\{1,...,m\}$)
+\item If not intuitive, try brute force and find a pattern for each $\pr[A_i]$
+\end{itemize}
+\item Use Product Rule to get $\pr[A_m]
+\begin{itemize}
+\item $\pr[A_1\cap\cdots\cap A_m]=\pr[A_1]\pr[A_2|A_1]\cdots\pr[A_m|A_1\cap\cdots\cap A_{m-1}]$
+\item If events are \textbf{independent} $\pr[A_1\cap\cdots\cap A_m]=\pr[A_1]\pr[A_2]\cdots\pr[A_m|A_{m-1}]$
+\end{itemize}
+\item Take natural log of both sides and simplify using the property that $\ln(1-\varepsilon)\approx-\varepsilon \x{for} |\varepsilon| <<1$
+\item Raise $e$ to the power of both sides ($e^n$) to derive approximate solution for $\pr[A_m]$
+\begin{itemize}
+\item $\pr[A_m]\approx e^{expression}$
+\end{itemize}
+\end{itemize}
+
+%%%% Topic %%%%
+\subsection*{Probability of Complete Collection}
+%%%% Notes %%%%
+\begin{itemize}
+\item Define event of failure of one iteration $E_k$
+\begin{itemize}[*]
+\item $E_k$ for $k=\{1,...,n\}$
+\item Derive $\pr[E_k]$ using method above: \textbf{Probability of Getting $n_i$ out of $n$ with $m$ picks}
+\end{itemize}
+\item find probability of failing any iteration (or/union)
+\begin{itemize}[*]
+\item $p := \pr[E_1\cup E_2\cup\cdots\cup E_n]$
+\end{itemize}
+\item Estimate $p$ using Union Bound
+\begin{itemize}[*]
+\item $p := \pr[E_1\cup E_2\cup\cdots\cup E_n]\le \pr[E_1]+\pr[E_2]+\cdots+\pr[E_n]$
+\end{itemize}
+\item Plug in $\pr[E_k]$ expression derived above to find $\pr[\x{failure of at least one iteration}] \le expression$
+\item Use expression to derive minimum value of $m$ s.t. $\pr[miss]\le p$
+\end{itemize}

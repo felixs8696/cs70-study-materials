@@ -1,0 +1,143 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,polynom}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}
+
+\title{CS70 - Lecture 11 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Secret Sharing}
+%%%% Notes %%%%
+\textbf{Minimality}
+\begin{itemize}
+\item Use mod $p$ space where $p$ is prime
+\item $p > n$ where n is the amount of shares you want to hand out
+\item $p > 2^b$ where $b$ is the number of bits you want in your secret
+\item Uses \textbf{Theorem}(There is always a prime between $n$ and $2n$). This strategy chooses a $p$ that is within 1 bit of secret size (minimality).
+\end{itemize}
+\textbf{Runtime}
+\begin{itemize}
+\item Polynomial in terms of $k$, $n$, and $\log{p}$
+\item Evaluate $k-1$ degree polynomials $n$ times as a system of linear equations, using $\log{p}$-bit numbers
+\item Reconstruct secret by solving system of $k$ equations using $\log{p}$-bit arithmetic.
+\end{itemize}
+\textbf{Counting}
+\begin{itemize}
+\item $m^{d+1}$: $d+1$ coefficients must be $\in \{0, ..., m-1\}$
+\item $m^{d+1}$: $d+1$ points with $y$-values that must be $\in \{0, ..., m-1\}$
+\end{itemize}
+
+%%%% Topic %%%%
+\subsection*{Erasure Codes}
+%%%% Notes %%%%
+\textbf{Solution}
+\begin{itemize}
+\item $n$ packet message, loses $k$ packets in channel
+\item must send $n+k$ packets
+\item Use $n$ point values to construct an $n-1$ degree polynomial
+\end{itemize}
+\begin{mdframed}
+\textbf{Erasure Coding Scheme:}
+\begin{enumerate}[1.]
+\item $n$ packet message: $m_0, m_1, ... , m_{n-1}$
+\item Choose prime $p \approx 2^b$ for mod space where each packet has $b$ bits
+\item $p > n+k$
+\item $P(x) = m_{n-1}x^{n-1} + ... + m_0 \pmod{p}$
+\item Send, $P(1), ..., P(n+k)$
+\end{enumerate}
+Any $n$ of the $n+k$ packets gives polynomial and the entire message (all coefficients or $y$-values)
+\end{mdframed}
+\begin{mdframed}
+\textbf{Erasure Coding Example:}\\
+\textbf{Sending}\\
+Send message 1, 4, 4 (3 packets, 2 bits)\\
+Make $P(x)$: $P(1) = 1, P(2) = 4, P(3) = 4$\\
+Try $\bmod 5$ because 5 is the closest prime to $2^b = 4$, but only gives 5 possible shares, so work $\bmod 7$\\
+Use Lagrange Interpolation\\
+$P(x) = 2x^2 + 4x + 2 \bmod 7$\\
+Send $(0, P(0))(1,P(1))...(6,P(7))$: 6 points\\
+\textbf{Receieving}\\
+Retrieve $P(x)$ using Lagrange or system of linear equations\\
+Need to know which $x$-value the correct packets correspond to\\
+
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Error Correction}
+%%%% Notes %%%%
+\begin{itemize}
+\item Need to recover information sent AND which packets are corrupted
+\item Send $n+2k$ packets because if $k$ errors exist, multiple original messages are possible if $< n+2k$ packets sent.
+\end{itemize}
+\begin{mdframed}
+\textbf{Reed-Solomon Code:}
+\begin{enumerate}[1.]
+\item Encoding polynomial $P(x)$ of degree n-1
+    \begin{itemize}
+    \item $P(1) = m_1,..., P(n) = m_n$
+    \item Can encode with packets as coefficients (check HW6)
+    \end{itemize}
+\item Use \textbf{Lagrange Interpolation} to get $P(x)$
+\item Send $(P1), ..., P(n+2k)$
+\item After noisy channel, receive $R(1), ..., R(n+2k)$
+\item $P(i) = R(i)$ for at least $n+k$ points $i$; $P(i) \ne R(i)$ for $k$ points
+\item Do not know where errors occurred
+\item $P(x) =$ unique degree $n-1$ polynomial
+\end{enumerate}
+\textbf{Error Locator Polynomial:} $\boldsymbol{E(x)=(x-e_1)(x-e_2)\cdots(x-e_k)}$
+\begin{itemize}
+\item Errors at points $e_1, ... e_k$; E(i) = 0 iff $e_j = i$ for some $j$; $E(x)$ has degree $k$
+\item Idea: Multiply equation $i$ by $E(x) = (x - i)$ iff $P(i) \ne R(i)$, but this creates $n+2k$ \textbf{non-linear} equations with $n_k$ unknowns.
+\item \textbf{Solution:} Let $Q(x) = E(x)P(x) = a_{n+k-1}x^{n+k-1} + \cdots + a_0$
+    \begin{itemize}
+    \item Now you have $n+2k$ linear equations $Q(i) = R(i)E(i)$
+    \item \textbf{Find $E(x)$ and $Q(x)$}
+        \begin{itemize}
+            \item $E(x) = x^k+b_{k-1}x^{k-1}\vdots b_0$ w/ $k$ unknown coefficients
+            \item $Q(x) = a_{n+k-1}x^{n+k-1} + \cdots + a_0$ w/ $n+k$ unknown coefficients
+            \item Solve for coefficients of $Q(x)$ and $E(x)$; Total Unknowns: $n+2k$
+        \end{itemize}
+    \item $\boldsymbol{P(x) = Q(x)/E(x)}$
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+\begin{mdframed}
+
+\textbf{Brute force: BAD}
+\begin{itemize}
+\item Remove every possible combination of $k$ received packets one at a time and form a degree $n+k-1$ polynomial with remaining $n+k$ points. First consistent solution gives the corrupted packet.
+\item Runtime: $(n/k)^k$: exponential in $k$ with $\binom{n+2k}{k}$ possibilities
+\end{itemize}
+\end{mdframed}
+
+\begin{mdframed}
+\textbf{RS Code Example:}\\
+\textbf{Problem:}
+\begin{itemize}
+\item Message 3,0,6 : tolerate $k = 1$ errors (send $n+2k = 5$ packets)
+\item Lagrange Encoding $P(x) = x^2 + x + 1 \pmod{7}$
+\item Send: $P(1) = 3, P(2) = 0, P(3) = 6, P(4) = 0, P(5) = 3$
+\item Receive: $R(1) = 3, R(2) = 1, R(3) = 6, R(4) = 0, R(5) = 3$
+\end{itemize}
+\textbf{Solution: Berklekamp-Welsh Algorithm}
+\begin{itemize}
+\item $Q(x) = E(x)P(x) = a_3x^3+a_2x^2+a_1x+a_0$
+\item $E(x) = x-b_0$
+\item $Q(i) = R(i)E(i)$
+\begin{align*}
+a_3+a_2+a_1+a_0 & \equiv 3(1-b_0) \pmod{7} \\
+a_3+4a_2+2a_1+a_0 & \equiv 1(2-b_0) \pmod{7} \\
+6a_3+2a_2+3a_1+a_0 & \equiv 6(3-b_0) \pmod{7} \\
+a_3+2a_2+4a_1+a_0 & \equiv 0(4-b_0) \pmod{7} \\
+6a_3+4a_2+5a_1+a_0 & \equiv 3(1-b_0) \pmod{7} 
+\end{align*}
+\item Gaussian Elimnation: $a_3=1, a_2=6, a_1=6, a_0=5$; $b_0=2$
+\item $Q(x) = x^3+6x^2+6x+5$
+\item $E(x)=x-2$
+\item Polynomial Long Division: $P(x) = Q(x)/E(x) = x^2+x+1 \pmod{7}$\\
+\polylongdiv{x^3+6x^2+6x+5}{x-2}
+\item\textbf{Message = 3,0,6}
+\item RS Code: $P(x) = x^2 + x + 1 \pmod{7}$ where $P(1) = 3, P(2) = 0, P(3) = 6$
+\end{itemize}
+\end{mdframed}
+\end{document}

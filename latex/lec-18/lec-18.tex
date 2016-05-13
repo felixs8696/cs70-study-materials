@@ -1,0 +1,117 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow, listings}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}\newcommand{\x}[1]{\textrm{ #1 }}\newcommand{\pr}{\textrm{Pr}}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+
+\title{CS70 - Lecture 18 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Random Variables}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Random variable is a known, deterministic, function that maps outcome to a number (onto, but not necessarily one-to-one)
+    \item Random Variable $X$ for an experiment with sample space $\Omega$ is a function $X: \Omega \rightarrow \R$
+    \begin{itemize}
+        \item $X$ assigns $X(\omega) \in \R$ to each $\omega \in \Omega$
+        \item $X$ is not random, nor a variable, it is called a random variable, because its outcome depends on the intial probability/experiment (varies from experiment to experiment)
+        \item After deriving $X$ and knowing the initial probabilities, can determine the likelihood of each outcome of $X$
+    \end{itemize}
+    \item $X^{-1}(A)=\{\omega|X(\omega)=A\}$: Inverse image of value $A$
+    \begin{itemize}
+        \item Set of outcomes that map to $A$
+    \end{itemize}
+\end{itemize}
+%%%% Distribution %%%%
+\textbf{Distribution}
+\begin{itemize}
+    \item The probability of $X$ taking on a value $A$.
+    \item Definition: The distribution of a random variable $X$ is $\{(a,\pr[X=a]):a \in \mathbb{A}\}$ where $\mathbb{A}$ is the range of $X$
+    \item $\pr[X=A]=\pr[X^{-1}(A)]$
+\end{itemize}
+%%%% Random Variable Method %%%%
+\begin{mdframed}
+\textbf{Random Variable Method}
+\begin{itemize}
+    \item Examine the elements of the Sample Space (ex. $\{HHH,THH,HTH,TTH,HHT,THT,HTT,TTT\}$
+    \item Define the Random Variables by given params ex. +1 on heads, -1 on tails $\Rightarrow \{3,1,1,-1,1,-1,-1,-3\}$
+    \item Determine the probability of any generalized event (ex. getting $i$ heads and $n-i$ tails if the prob. of getting heads is $p$: $p^i(1-p)^{n-i}$)
+    \item Multiply the above probability by the amount of times it occurs (summation) (ex. All ways to get $i$ heads out of $n$ flips: $\binom{n}{i}$
+    \item This determines the probability of each element in the Random Variable: the distribution of outcomes. (ex. Binomial Distribution)
+\end{itemize}
+\end{mdframed}
+%%%% Binomial Distribution %%%%
+\begin{mdframed}
+\textbf{Binomial Distribution}
+\eq{B(n,p): \pr[X=i]=\binom{n}{i}p^i(1-p)^{n-i}, i\in\{0,\cdots,n\}}
+\begin{itemize}
+    \item Flip $n$ coins with probability $p$ to get heads, Random var: No. of heads
+    \item Ways to choose $i$ heads out of $n$ flips: $\binom{n}{i}$
+    \item Determine probability of $\omega=i$ heads (probability of heads in any position is $p$): $\pr$ of $i$ heads and $n-1$ tails is $p^i$ and $(1-p)^{n-i}$ respectively $\therefore \pr[\omega]=p^i(1-p)^{n-i}$
+    \item Probability of $X=i$ is the sum of all $\pr[\omega]$ where $\omega$ contains $i$ heads: $\binom{n}{i}$
+\end{itemize}
+\end{mdframed}
+%%%% Error Channel %%%%
+\textbf{Error Channel}
+\begin{itemize}
+    \item Apply Binomial Distribution
+    \item Packet is corrupted with probability $p$
+    \item Send $n+2k$ packets
+    \item Find probability of at most $k$ corruptions
+    \item $\sumlim{i \le k}{}{\binom{n+2k}{i}p^i(1-p)^{n+2k-i}}$: Sum gets total probability of all $i$ corruptions s.t. $i\le k$
+    \item For RS Code, choose $k$ s.t. the above probability is large
+\end{itemize}
+%%%% Combining Random Variables %%%%
+\subsection*{Combining Random Variables}
+\begin{itemize}
+    \item Let $X$ and $Y$ be two Random Vars in the same Probability space
+    \item Then, $X+Y$ is an RV that assigns value $X(\omega)+Y(\omega)$ to $\omega$
+    \item General Case: $g(X,Y,Z)$ assigns value $g(X(\omega), Y(\omega), Z(\omega)) \x{to} \omega$
+\end{itemize}
+%%%% Expectation %%%%
+\subsection*{Expectation}
+\begin{itemize}
+    \item $E[X]=\sumlim{a}{}{a\times \pr[X=A]}\approx \frac{X_1+\cdots+X_n}{N}$
+    \item Random variable $X$, $X$ has $a$ possible values (gains). Multiply each possible gain $a$ by the probability of RV $X=a$ and sum over all RVs to get expected value.
+    \item Average = $E(X)$ holds for uniform probability
+    \item Expectation is linear
+\end{itemize}
+\begin{mdframed}
+\textbf{Expectation Theorem}
+\eq{E[X]=\sumlim{\omega}{}{X(\omega)\times \pr[\omega]}}
+\begin{itemize}
+    \item Sum of all products of $X_i$ and the probability of getting that $X_i$ (also called the mean by frequentist interpretation): \textbf{Law of Large Numbers}
+\end{itemize}
+\end{mdframed}
+%%%% Expectation Derivation Methods %%%%
+\begin{mdframed}
+\textbf{Expectation Derivation Methods}
+\begin{itemize}
+    \item Two ways to compute the mean value
+    \begin{itemize}
+        \item Given: Distribution of $X$ (set of values $a$ and their probabilities)
+        \begin{itemize}
+            \item $E[X]=\sumlim{a}{}{a\times \pr[X=A]}\approx \frac{X_1+\cdots+X_n}{N}$
+        \end{itemize}
+        \item Given: Probability Space
+        \begin{itemize}
+            \item Sum over all $\omega$'s in probability space
+            \item $E[X]=\sumlim{\omega}{}{X(\omega)\times \pr[\omega]}$
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+%%%% Example of Both Derivation Methods %%%%
+\textbf{Example of Both Derivation Methods}
+\begin{itemize}
+    \item Flip fair coin 3 times
+    \item $\Omega=\{HHH,HHT,HTH,THH,HTT,THT,TTH,TTT\}$
+    \item $X=\x{number of H's}: \{3,2,2,2,1,1,1,0\}$
+    \item Method 1: $E[X]=\sumlim{a}{}{a\times \pr[X=A]}=3(\frac{1}{8})+2(\frac{3}{8})+1(\frac{3}{8})+0(\frac{1}{8})=\frac{3}{2}$
+    \item Method 2: $E[X]=\sumlim{\omega}{}{X(\omega)\times \pr[\omega]}=(3+2+2+2+1+1+1+0)(\frac{1}{8})$
+\end{itemize}
+\end{document}

@@ -1,0 +1,287 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend,mathrsfs,mathtools}
+\usepackage[shortlabels]{enumitem}
+\usepackage[nobreak=true]{mdframed}
+\usepackage[margin=0.75in]{geometry}
+\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}
+\renewenvironment{leftbar}[2][\hsize]{
+\def\FrameCommand
+{
+    {\color{#2}\vrule width 3pt}
+    \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newtheorem*{prop}{Proposition}
+\renewcommand{\theenumi}{\alph{enumi}}
+\newtheorem{theorem}{Theorem}
+\newcommand*{\QEDB}{\hfill\ensuremath{\square}}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\pr}[1]{\textrm{Pr}[#1]}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dpic}[1]{\begin{center}\includegraphics[width=0.5\textwidth]{#1}\end{center}}
+\newcommand{\dpicl}[1]{\\\includegraphics[width=0.5\textwidth]{#1}\\}
+\newcommand{\tpic}[1]{\begin{center}\includegraphics[width=0.33\textwidth]{#1}\end{center}}
+\newcommand{\wpic}[1]{\begin{center}\includegraphics[width=0.8\textwidth]{#1}\end{center}}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqx}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{\begin{enumerate}[1.]#1\end{enumerate}}}
+\newcommand{\ex}[1]{\easy{blue}{#1}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\items}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\itemss}[2]{\begin{itemize}[#1]#2\end{itemize}}
+\newcommand{\rng}[2]{#1,\ldots,#2}
+\newcommand{\E}[1]{E[#1]}
+\newcommand{\var}[1]{\x{Var}[#1]}
+\newcommand{\e}{\varepsilon}
+\newcommand{\limty}{\lim_{n\rightarrow\infty}}
+\newcommand{\ninfty}{n\rightarrow\infty}
+\newcommand{\cov}{\x{cov}}
+\newmdenv[topline=false, rightline=false, bottomline=false,%
+  linewidth=3pt, innerrightmargin=0pt, leftmargin=4pt,%
+  innerleftmargin=5pt, skipabove=5pt, skipbelow=5pt]{mdleftbar}
+\newcommand{\example}[2]{\textbf{Example: }\\#1\begin{mdleftbar}#2\end{mdleftbar}}
+\newcommand{\cur}{\mathscr}
+\newcommand{\bmat}[1]{\begin{bmatrix*}[r]#1\end{bmatrix*}}
+\newcommand{\bmatc}[1]{\begin{bmatrix*}[c]#1\end{bmatrix*}}
+\newcommand{\bmats}[2]{\begin{bmatrix}[#1]#2\end{bmatrix}}
+
+\title{CS70 - Lecture 25 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Markov Chain Review}
+%%%% Notes %%%%
+\simple{
+    \item Markov Chain:
+    \items{
+        \item Finite MC set $\cur{X}$
+        \item Initial Distribution $\pi_0$
+        \item Transition Probabilities $P = \set{P(i,j),i,j\in \cur{X}}$
+        \item $\pr{X_0 = i} = \pi_0(i),i \in \cur{X}$
+        \item $\pr{X_{n+1} = j | X_0,\ldots,X_n = i} = P(i,j),i,j \in \cur{X},n \ge 0$
+        \item Note: $\pr{X_0 = i_0,X_1 = i_1,\ldots,X_n = i_n} = \pi_0(i_0)P(i_0,i_1)···P(i_{n-1},i_n)$.
+    }
+    \item First Passage Time:
+    \items{
+    	\item $A\cap B = \emptyset;\beta(i) = \E{T_A|X_0 = i};\alpha(i) = \pr{T_A < T_B|X_0 = i}$
+    	\item $\beta(i) = 1+\sumlim{j}{}{P(i,j)\beta(j)};\alpha(i) = \sumlim{j}{}{P(i,j)\alpha(j)}$
+    }
+}
+\eqs{
+\textbf{First Passage Time:}\\
+Given disjoint sets of states $A\cap B=\emptyset$\\
+\textbf{Expected Timesteps to get to state in A}
+\eq{\beta(i)=\E{T_A|X_0=i}=1+\sumlim{j}{}{P(i,j)\beta(j)}}
+\textbf{Probability of reaching A before B}
+\eq{\pr{T_A<T_B|X_0=i}}
+}
+%%%% Topic %%%%
+\subsection*{Distribution of $X_n$}
+%%%% Notes %%%%
+\simple{
+    \item Use $\pi_n=\pi_0P^n$ function to check if it converges to a vector that does depend on $\pi_0$ or not
+}
+\items{
+    \item Let $\pi_m(i) = \pr{X_m = i},i \in X$. Note that
+    \item $\pr{X_{m+1} = j} = \sumlim{i}{}{\pr{X_{m+1} = j,X_m = i}}$
+    \items{
+        \item $= \sumlim{i}{}{\pr{X_m = i}\pr{X_{m+1} = j | X_m = i}}$
+        \item $= \sumlim{i}{}{\pi_m(i)P(i,j)}$
+        \item Hence, $\pi_{m+1}(j) = \sumlim{i}{}{\pi_m(i)P(i,j)},\forall j \in X$ .
+    }
+    \item With $\pi_m,\pi_{m+1}$ as a row vectors, these identities are written as $\pi_{m+1} = \pi_mP$.
+    \items{
+        \item Thus, $\pi_1 = \pi_0P, \pi_2 = \pi_1P = \pi_0PP = \pi_0P^2, \ldots$
+        \item Hence, $\pi_n = \pi_0P^n,n \ge 0$
+    }
+}
+\eqs{
+\textbf{Distribution of $X_n$}\\
+Given that $\pi_m(i)=\pr{X_m=i}, i \in \cur{X}$
+\eq{\pi_{m+1}(j) = \sumlim{i}{}{\pi_m(i)P(i,j)},\forall j \in X}
+\textbf{With $\pi_m,\pi_{m+1}$ as row vectors}
+\eq{\pi_{m+1} = \pi_mP}
+\textbf{General case of $\pi_n$}
+\eq{\pi_n = \pi_0P^n,n \ge 0}
+}
+%%%% Topic %%%%
+\subsection*{Balance Equations}
+%%%% Notes %%%%
+\simple{
+    \item A distribution $\pi_0$ such that $\pi_m = \pi_0, \forall m$ is said to be an invariant distribution ($\pi_0P = \pi_0$).
+}
+\items{
+    \item \textbf{Theorem} A distribution $\pi_0$ is \textbf{invariant} iff $\pi_0P = \pi_0$. These equations are called the balance equations.
+    \item \textbf{Proof:} $\pi_n = \pi_0P^n$, so that $\pi_n = \pi_0, \forall n$ iff $\pi_0P = \pi_0$
+    \items{
+    	\item $\pi_0$ is invariant $\implies$ the distribution of $X_n$ is always equal to $X_0$.
+    	\item This does not mean that $X_n$ does not move. It means that the probability that it leaves a state $i$ is equal to the probability that it enters state $i$.
+    	\item The balance equations say that $\sumlim{j}{}{\pi_(j)P(j,i)} = \pi_(i)$
+    	\item That is, $\sumlim{j\ne i}{}{\pi_(j)P(j,i)} = \pi_(i)(1-P(i,i)) = \pi_(i)\sumlim{j\ne i}{}{P(i,j)}$.
+    	\item Thus, $\pr{\x{enter } i} = \pr{\x{leave } i}$.
+    }
+}
+\textbf{Example 1:}
+\dpic{be1}
+\begin{mdleftbar}
+$\pi P = \pi \iff \bmat{\pi(1)&\pi(2)}\bmat{1-a&a\\b&1-b}= \bmat{\pi(1)&\pi(2)}$\\
+$\iff \pi(1)(1-a) +\pi(2)b = \pi(1)$ and $\pi(1)a+\pi(2)(1-b) = \pi(2)$\\
+$\iff \pi(1)a = \pi(2)b$\\
+Equations are redundant, so add an equation: $\pi(1) +\pi(2) = 1$. Then we find\\
+$\pi = \bmat{\frac{b}{a+b}&\frac{a}{a+b}}$
+\end{mdleftbar}
+\textbf{Example 2:}
+\dpic{be2}
+\begin{mdleftbar}
+$\pi P = \pi \iff \bmat{\pi(1),\pi(2)}\bmat{1&0\\0&1}$\\
+$= \bmat{\pi(1),\pi(2)} \iff \pi(1) = \pi(1)$ and $\pi(2) = \pi(2)$\\
+Every distribution is invariant for this Markov chain. This is obvious, since $X_n = X_0$ for all $n$. Hence, $\pr{X_n = i} = \pr{X_0 = i},\forall (i,n)$
+\end{mdleftbar}
+\subsection*{Irreducibility}
+\simple{
+    \item MC is \textbf{irreducible} if it can go from every state $i$ to every state $j$ in any amount of steps
+}
+\subsection*{Existence and Uniqueness of Invariant Distribution}
+\items{
+    \item \textbf{Theorem:} A \textbf{finite irreducible} Markov chain has \textbf{one and only one invariant distribution}.
+    \items{
+        \item There is a unique positive vector $\pi = \bmat{\pi(1)&\ldots&\pi(K)}$ such that $\pi P = \pi$ and $\sumlim{k}{}{\pi(k)} = 1$
+    }
+    \item \textbf{Fact:} If a Markov chain has \textbf{two different invariant distributions} $\pi$ and $\nu$, then it has \textbf{infinitely many invariant distributions}.
+    \itemss{*}{
+        \item $p\pi + (1-p)\nu$ is then invariant since $[p\pi + (1-p)\nu] P = p\pi P + (1-p)\nu P = p\pi + (1-p)\nu$
+    }
+}
+\eqs{
+\textbf{Finite irreducible Markov chain has one and only one invariant distribution}\\
+There is a unique positive vector $\pi = \bmat{\pi(1)&\ldots&\pi(K)}$ such that 
+\eq{\pi P = \pi \xs{and} \sumlim{k}{}{\pi(k)} = 1}
+}
+\subsection*{Long Term Fraction of Time in States}
+\items{
+    \item \textbf{Theorem} Let $X_n$ be an irreducible Markov chain with invariant distribution $\pi$.
+    \item Then, for all $i,\frac{1}{n}\sumlim{m-0}{n-1}{1\set{X_m = i}} \rightarrow \pi(i)$, as $\ninfty$.
+    \item The left-hand side is the fraction of time that $X_m = i$ during steps $0,1,\ldots,n-1$. Thus, this fraction of time approaches $\pi(i)$.
+}
+\eqs{
+\textbf{Long Term Fraction of Time in States}
+\eq{\x{for all } i,\frac{1}{n}\sumlim{m-0}{n-1}{1\set{X_m = i}} \rightarrow \pi(i)\, \xs{as} \ninfty}
+}
+\textbf{Example 1}
+\dpic{fot1}
+\items{
+    \item The fraction of time in state 1 converges to 1/2, which is $\pi(1)$.
+}
+\textbf{Example 2}
+\dpic{fot2}
+\subsection*{Convergence to Invariant Distribution}
+\items{
+    \item Assuming the MC is irreducible $\pi_n$ does not necessarily approach a unique invariant distribution $\pi$
+    \item \textbf{Example:}
+}
+\dpic{converge}
+\begin{mdleftbar}
+Assume $X_0 = 1$. Then $X_1 = 2,X_2 = 1,X3_ = 2,\ldots$\\
+Thus, if $\pi0 = [1,0], \pi1 = [0,1], \pi2 = [1,0], \pi3 = [0,1]$, etc.\\
+Hence, $\pi_n$ does not converge to $\pi = [1/2,1/2]$.
+\end{mdleftbar}
+\subsection*{Periodicity}
+\simple{
+    \item If the Markov chain is irreducible, $d(i)$ is the same for all $i$. Check for 1 state.
+}
+\items{
+\item \textbf{Definition} If $d(i) = 1$, the Markov chain is said to be \textbf{aperiodic}.
+    \items{
+        \item  Otherwise, it is periodic with period $d(i)$.
+    }
+    \item \textbf{Theorem} (see below)
+    \items{
+        \item Gcd of the set of all numbers of steps it takes to go from from state $i$, back to state $i$ where the probability of that path is greater that 0
+        \item Proof: See Lecture notes 24.
+    }
+}
+\eqs{
+\textbf{Theorem: Periodicity}\\
+Assume that the MC is irreducible
+\eq{d(i) := g.c.d.\set{n > 0 | \pr{X_n = i | X_0 = i} > 0} \xs{has the same value for all states} i}
+}
+\textbf{Example}
+\dpic{p1}
+\begin{mdleftbar}
+$[A]: \set{n > 0 | \pr{X_n = 1|X_0 = 1} > 0} = \set{3,6,7,9,11,...} \implies d(1) = 1$.\\
+$\set{n > 0 | \pr{X_n = 2|X_0 = 2} > 0} = \set{3,4,...} \implies d(2) = 1$.\\
+$[B]: \set{n > 0 | \pr{X_n = 1|X_0 = 1} > 0} = \set{3,6,9,...} \implies d(i) = 3$.\\
+$\set{n > 0 | \pr{X_n = 5|X_0 = 5} > 0} = \set{6,9,...} \implies d(5) = 3$.
+\end{mdleftbar}
+\subsection*{Convergence of $\pi_n$}
+\items{
+    \item Irreducible MC $\implies$ fraction of time spent in state $i$ is equal to the invariant probability of that state
+    \item Irreducible + Aperiodic MC $\implies$ fraction of time spent in state $i$ is equal to and converges to the invariant probability of that state
+    \item \textbf{Proof:} See EE126, or Lecture notes 24.
+}
+\eqs{
+\textbf{Theorem: Convergence of $\pi_n$}\\
+Let $X_n$ ba an irreducible and aperiodic MC with invariant distribution $\pi$
+\eq{\x{For all } i \in X, \pi_n(i) \rightarrow \pi(i), \xs{as} \ninfty}
+}
+\textbf{Example 1}
+\items{
+    \item Irreducible + Aperiodic MC $\implies$ fraction of time spent in state $i$ is equal to and converges to the invariant probability of that state
+}
+\dpic{conv1}
+\textbf{Example 2}
+\items{
+    \item Irreducible MC $\implies$ fraction of time spent in state $i$ is equal to the invariant probability of that state
+}
+\dpic{conv2}
+\textbf{Example 3}
+\items{
+    \item Loop implies aperiodicity
+}
+\dpic{conv3}
+\subsection*{Calculating $\pi$}
+\textbf{Method}
+\simple{
+    \item Let $P$ be irreducible
+    \item $\pi P = \pi \implies \pi[P -I] = 0$
+    \item Replace the last equation with ones $\pi1 = 1$ to get $\pi P_1=[0,0,1]$
+    \items{
+        \item Observe the sum of the columns of $P-I=0$, which shows the equations are redundant, which means the equations are redundant
+    }
+    \item Solve $\pi=[0,0,1]P_1^{-1}$
+}
+\example{Let $P$ be irreducible. Find $\pi$ where $P =\bmat{0.8&0.2&0\\0&0.3&0.7\\0.6&0.4&0}$}
+{
+One has $\pi P = \pi$, i.e., $\pi[P -I] = 0$ where $I$ is the identity matrix:\\
+$\pi \bmat{0.8-1&0.2&0\\0&0.3-1&0.7\\0.6&0.4&0-1}= [0,0,0]$.\\
+However, the sum of the columns of $P -I$ is 0. This shows that these equations are redundant: If all but the last one hold, so does the last one. Let us replace the last equation by $\pi1 = 1$, i.e., $\sumlim{j}{}{\pi(j)} = 1$:\\
+$\pi \bmat{0.8-1&0.2&1\\0&0.3-1&1\\0.6&0.4&1}= [0,0,1]$.\\
+Hence, $\pi = [0,0,1]\bmat{0.8-1&0.2&1\\0&0.3-1&1\\0.6&0.4&1}^{-1}\approx [0.55,0.26,0.19]$
+}
+\subsection*{Summary: Markov Chains}
+\simple{
+    \item Markov Chain: $\pr{X_n+1 = j|X_0,\ldots,X_n = i} = P(i,j)$
+    \item FSE: $\beta(i) = 1+\sumlim{j}{}{P(i,j)\beta(j)};\alpha(i) = \sumlim{j}{}{P(i,j)\alpha(j)}$.
+    \item $\pi_n = \pi_0P^n$
+    \item $\pi$ is invariant iff $\pi P = \pi$
+    \item Irreducible $\implies$ one and only one invariant distribution $\pi$
+    \item Irreducible $\implies$ fraction of time in state $i$ approaches $\pi(i)$
+    \item Irreducible + Aperiodic $\implies \pi_n \rightarrow \pi$.
+    \item Calculating $\pi$: One finds $\pi = [0,0.\ldots,1]Q-1$ where $Q = \cdots$.
+}
+\end{document}

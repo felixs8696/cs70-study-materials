@@ -1,0 +1,145 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow, listings}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+
+\title{CS70 - Lecture 15 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Review Turing and Halt}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Turing(P) includes Halt(P,P)
+    \item If halts (infinite loop), if doesn't halt, halt (diagonalization)
+    \item Halt program exists $\Rightarrow$ Turing program exists
+    \item Turing("Turing") interpret program 'Turing' as text
+    \begin{itemize}
+        \item Neither halts nor loops (diagonlized statement on itself)
+        \item Therefore, Turing program DNE
+        \item No Turing program $\Rightarrow$ No Halt program (Contrapositive)
+    \end{itemize}
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Review Stars and Bars}
+\href{https://en.wikipedia.org/wiki/Stars_and_bars_%28combinatorics%29}{Wikipedia: Stars and Bars}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Choose $n$ from $k$ with replacement, order doesn't matter
+    \item Stars and Bars Bijection (Counting rule)
+    \item Place $n$ (total) objects in $k$ bins
+    \item $k$ bins are distinguishable, objects are not
+    \item $k-1$ bars represent $k$ bins
+    \item Thm 1 (positive nums): Each bin must contain an object, there can only be $\le 1$ bar between each star. You must choose $k-1$ bars from the $n-1$ available positions.
+    \item Thm 2 (non-negative nums): Bins can contain any no. of objects, there can be $\ge k-1$ bars between each star. You must choose $k-1$ bars from the $n+(k-1)$ available positions.
+\end{itemize}
+\begin{mdframed}
+\textbf{With Replacement/Order Doesn't Matter:}
+\begin{align}\textrm{Positive Groups} &= \dbinom{n-1}{k-1}\end{align}
+\begin{align}\textrm{Non-Negative Groups} &= \dbinom{n+(k-1)}{k-1}\end{align}
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Combinatorial Proofs}
+%%%% Notes %%%%
+\begin{mdframed}
+\begin{itemize}
+    \item Define what the Left side counts and what the Right side counts, then equate them
+    \item Ask same question for both sides and answer them using the correct approach corresponding to the side
+\end{itemize}
+\end{mdframed}
+\begin{itemize}
+    \item $\binom{n}{k} = \binom{n}{n-k}$
+    \begin{itemize}
+        \item Left: Ways to choose $k$ out of $n$ items
+        \item Right: Ways to (not) choose $n-k$ out of $n$ items, which is the same as choose $k$ out of $n$ items
+    \end{itemize}
+    \item $\binom{n}{k}=\binom{n-1}{k-1}+\cdots+\binom{k-1}{k-1}$
+    \begin{itemize}
+        \item Left: Ways to choose $k$ out of $n$ items
+        \item Right: Sum number of subsets that include the first $i$ items and the number of subsets that do not include the first $i$ items
+    \end{itemize}
+    \item $2^n=\binom{n}{kn}+\binom{n}{n-1}+\cdots+\binom{n}{0}$ : \textbf{Binomial Thm}
+    \begin{itemize}
+        \item Sum of coefficients of an $(1+x)^n$ binomial ($n$th row in Pascal's Triangle)
+        \item Left: No. of subsets of $n$ choices (element $i$ is either in or out of the subset, 2 poss.)
+        \item Right: Sum of $\binom{n}{i}$ from $i$ to $n$
+        \begin{itemize}
+            \item $\binom{n}{i}$ ways to choose $i$ elements of $n$ choices
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Pascal's Triangle}
+%%%% Notes %%%%
+\tincludegraphics{pascals}
+\begin{itemize}
+    \item Row $n$ = coefficients of $(1+x)^n$
+    \item Choose $2^n$ terms: 1 or $x$ from $(1+x)$
+    \begin{itemize}
+        \item Combine all terms corresponding to $x^k$
+        \item Coefficient of $x^k$ is $\binom{n}{k}$: you choose $k$ factors (products) that include $x$ and there are $n$ $x$'s to choose from
+    \end{itemize}
+\end{itemize}
+\begin{mdframed}
+\textbf{Pascal's Rule:}
+\begin{itemize}
+    \item Left: No. of $k$ subsets from $n+1$ choices
+    \item Right: No. of subsets that choose the first item + No. of subsets that do not choose the first item = Left
+    \begin{itemize}
+        \item $\binom{n}{k-1}$: No. of subsets of $n$ that contain the first item. (Take away first item, left with $n$ items and $k-1$ remaining choices)
+        \item $\binom{n}{k}$: No. of $k$ subsets of $n$ that do not contain the first item. (Take away first item, left with $n$ items, but still need to make $k$ choices.
+    \end{itemize}
+\end{itemize}
+\begin{equation}\binom{n+1}{k}=\binom{n}{k}+\binom{n}{k-1}\end{equation}
+\end{mdframed}
+%%%% Topic %%%%
+\subsection*{Simple Inclusion/Exclusion}
+%%%% Notes %%%%
+\begin{mdframed}
+\begin{itemize}
+    \item \textbf{Sum Rule: For disjoint sets} $S$ and $T$ : $|S\cup T|=|S|+|T|$
+    \item \textbf{Inclusion/Exclusion Rule: For any} $S$ and $T$ : $|S\cup T=|S|+|T|-|S\cap T|$
+    \begin{itemize}
+        \item Ex. No. of 10 digit phone numbers that have 7 as the first or second digit
+        \item $S$ = first digit 7. $|S|=10^9$
+        \item $T$ = second digit 7. $|T|=10^9$
+        \item $S\cap T$ = first and second digit. $|S\cap T|=10^8$
+        \item $|S|+|T|-|S\cap T|=10^9+10^9-10^8$
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+\hrulefill
+%%%% Topic %%%%
+\subsection*{Probability Space}
+%%%% Notes %%%%
+\begin{itemize}
+    \item Random Experiment: Define possible outcomes and likelihoods (percentages) have Statistical regularity
+    \item Set of $\Omega$ outcomes: (Ex. $\Omega=\{H,T\}$)
+    \begin{itemize}
+        \item Probabilities assigned to each outcome: $\x{Pr}[H]=0.5, \x{Pr}[T]=0.5$
+        \item Elements of $\Omega$ describes one outcome of the complete experiment
+    \end{itemize}
+    \item Assign probability to each outcome $\x{Pr}[A]$
+    \begin{itemize}
+        \item Probabilities assigned to each outcome: Ex. $\x{Pr}[H]=0.5, \x{Pr}[T]=0.5$
+    \end{itemize}
+\end{itemize}
+\begin{mdframed}
+\begin{itemize}
+    \item $\Omega$ = sample space (can be countable or uncountable)
+    \item $\omega \in \Omega$ = sample point
+    \item probability $\x{Pr}[\omega]$ s.t. $0 \le \x{Pr}[\omega] \le 1$ and $\sum\limits_{\omega \in \Omega}\x{Pr}[\omega] = 1$
+\end{itemize}
+\end{mdframed}
+\textbf{Uniform Probability Space}
+\begin{itemize}
+    \item Each outcome $\omega$ is equally probable: $\x{Pr}[\omega]=\frac{1}{\Omega}$ for all $\omega$
+    \item $\Omega$ must be finite
+\end{itemize}
+\textbf{Non-Uniform Probability Space}
+\begin{itemize}
+    \item Each outcome $\omega$ is any $\x{Pr}[\omega]$ s.t. $0 \le \x{Pr}[\omega] \le 1$ and $\sum\limits_{\omega \in \Omega}\x{Pr}[\omega] = 1$
+\end{itemize}
+\end{document}

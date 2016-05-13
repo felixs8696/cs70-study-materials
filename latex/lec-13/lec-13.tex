@@ -1,0 +1,147 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow, listings}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}
+
+\title{CS70 - Lecture 13 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Countability Summary:}
+%%%% Notes %%%%
+\begin{itemize}
+    \item $S$ is countable if there is a bijection between $S$ and some subset of $\N$.
+    \item If the subset of $\N$ is finite, $S$ has finite cardinality.
+    \item If the subset of $\N$ is infinite, $S$ is countably infinite.
+    \item Bijection with natural numbers $\implies$ countably infinite.
+    \item Enumerable (listing) $\equiv$ countable.
+    \item Subset of countable set is countable.
+    \item All countably infinite sets have the same cardinality
+    \item Natural numbers have finite number of digits
+\end{itemize}
+
+%%%% Topic %%%%
+\subsection*{Digonalization:}
+%%%% Notes %%%%
+\begin{itemize}
+    \item The set of all subsets $S_i$ of $\N$ (powerset of $\N$ is not countable
+    \begin{itemize}
+        \item Arbitrary Listing: $L$
+        \item Diagonal set $D$: For each index $i$ of $L$, if $i \not\in S_i$, put $i$ in $D$, otherwise omit $i$
+        \item $D$ is not in $L$ by construction: $D$ is different from each $i$th set $S_i$ in L, for every $i$
+        \item $D$ is a subset of $N$: every element in $D$ is a natural number
+        \item $L$ does not contain all subsets of $N$: Contradiction
+    \end{itemize}
+\end{itemize}
+
+\begin{mdframed}
+\textbf{Diagonalization Algorithm:}
+    \begin{enumerate}[1.]
+        \item Assume that set $S$ can be enumerated.
+        \item Consider an arbitrary list of all the elements of $S$.
+        \item Use the diagonal from the list to construct a new element $t$.
+        \item Show that $t$ is different from all elements in the list $\implies t$ is not in the list.
+        \item Show that $t$ is in $S$.
+        \item Contradiction.
+    \end{enumerate}
+\end{mdframed}
+
+%%%% Topic %%%%
+\subsection*{Cardinalities:}
+%%%% Notes %%%%
+\begin{mdframed}
+\textbf{Continuum Hypothesis:}
+\begin{itemize}
+    \item Goedel proved this hypothesis cannot be proven with math we currently know
+    \item There is no infinite set whose cardinality is between the cardinality of an infinite set and its power set.
+\end{itemize}
+\end{mdframed}
+\pagebreak
+
+\textbf{Uncountable Sets:}
+\begin{itemize}
+    \item Prove equivalence between cardinalities
+    \item Show bijection exists between two sets: uncountable sets cannot be enumerated
+    \item Create function $f: B \rightarrow A$ (can include multiple casesfor certain domains)
+    \item Prove mapping is one to one by testing on arbitrary values: $x, y$ (Need to validate for multiple cases)
+    \begin{itemize}
+        \item Example: $|[0,1]| \equiv |\R|$
+        \item $f: \R^+ \rightarrow [0,1]$
+    \end{itemize}
+\end{itemize}
+
+%%%% Topic %%%%
+\subsection*{Undecidability:}
+%%%% Notes %%%%
+\begin{mdframed}
+\textbf{Russell's Paradox:}
+    \begin{itemize}
+        \item Naive Set Theory: Any definable collection is a set.
+        \begin{equation}\exists y\forall x(x \in y \iff P(x))\end{equation}
+        \item NST : $y$ = the set of elements that satifies $P(x)$
+        \item Make statement: $P(x) = x \not\in x$
+        \item By NST: There exists a $y$ that satisfies above statement for $P(x)$
+        \item Plug in $x = y$ to NST
+        \begin{equation}y \in y \iff y \not\in y\end{equation}
+        \item Methematicl system is broken, because conditions and statements are false and contradictions
+    \end{itemize}
+\end{mdframed}
+
+%%%% Topic %%%%
+\subsection*{HALT: DNE}
+%%%% Notes %%%%
+\begin{itemize}
+    \item $HALT(P,I)$ : P = program, I = input to program
+    \begin{itemize}
+        \item Theoretically determines if $P(I)$ halts or loops forever
+    \end{itemize}
+\end{itemize}
+
+\begin{mdframed}
+\textbf{Halt Turing Proof:}
+\begin{itemize}
+    \item Assume $HALT(P,I)$ exists
+    \item Set $P = Turing(P)$
+    \item Use Diagonalization
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    def Turing(P):
+        if(HALT(P,P)): #halts
+            go into infinite loop
+        else
+            halt immediately
+\end{lstlisting}
+\begin{itemize}
+    \item Assume $Turing(Turing)$ halts
+    \item Run $HALTS(Turing, Turing)$
+    \begin{itemize}
+        \item if 'halts', Turing(Turing) 'goes into infinite loop'
+        \item if loops forever, Turing(Turing) 'halts immediately'
+    \end{itemize}
+    \item Contradiction, so $HALT(P,P)$ does not exist
+\end{itemize}
+\end{mdframed}
+
+\begin{mdframed}
+\textbf{Halt Diagonlization Proof:}
+\begin{itemize}
+    \item Program and input are both enumerable (fixed length strings)
+    \item Program either halts or loops on any input
+    \item Create list: $P_i \rightarrow {P_j(P)}$ where $i,j \in \N$ 
+    \item Each entry of list is arbitrarily $HALT$ or $LOOP$
+    \item Diagonal exists, so create $Turing()$ s.t. it returns opposite values along the diagonal
+    \item This means $Turing()$ is not in the list $\implies Turing()$ is not a prgoram
+    \begin{itemize}
+        \item $Turing$ is a simple function constructed from $HALT$
+        \item $\therefore\, Turing()$ DNE $\implies HALT()$ DNE
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+
+%%%% Topic %%%%
+\subsection*{Undecidable Problems}
+%%%% Notes %%%%
+\begin{itemize}
+    \item 
+\end{itemize}
+\end{document}

@@ -1,0 +1,229 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\N}{\mathbb N}
+\newcommand{\x}[1]{\textrm{#1}}
+\newcommand{\pr}[1]{\textrm{Pr}[#1]}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dpic}[1]{\begin{center}\includegraphics[width=0.5\textwidth]{#1}\end{center}}
+\newcommand{\dpicl}[1]{\\\includegraphics[width=0.5\textwidth]{#1}\\}
+\newcommand{\tpic}[1]{\begin{center}\includegraphics[width=0.33\textwidth]{#1}\end{center}}
+\newcommand{\wpic}[1]{\begin{center}\includegraphics[width=0.8\textwidth]{#1}\end{center}}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\eqx}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\renewenvironment{leftbar}[2][\hsize]
+{
+    \def\FrameCommand
+    {
+        {\color{#2}\vrule width 3pt}
+        \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{\begin{enumerate}[1.]#1\end{enumerate}}}
+\newcommand{\ex}[1]{\easy{blue}{#1}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\items}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\itemss}[2]{\begin{itemize}[#1]#2\end{itemize}}
+\newcommand{\rng}[2]{#1,\ldots,#2}
+\newcommand{\E}[1]{E[#1]}
+\newcommand{\var}[1]{\x{Var}[#1]}
+\newcommand{\e}{\varepsilon}
+\newcommand{\limty}{\lim_{n\rightarrow\infty}}
+\newcommand{\ninfty}{n\rightarrow\infty}
+\newcommand{\cov}{\x{cov}}
+\newmdenv[topline=false, rightline=false, bottomline=false,%
+  linewidth=3pt, innerrightmargin=0pt, leftmargin=4pt,%
+  innerleftmargin=5pt, skipabove=5pt, skipbelow=5pt]{mdleftbar}
+
+\title{CS70 - Lecture 22 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Confidence Intervals}
+%%%% Notes %%%%
+\simple{
+    \item Use Chebyshev: $\pr{\abs{X-\E{X}}\ge a}\le\frac{\var{X}}{a^2}$ where $\frac{\var{X}}{a^2}\le5\%$ to find $a$
+    \item Define $[A_n-a,A_n+a]$ as a 95\% \textbf{confidence interval}
+}
+\textbf{Example}
+\items{
+    \item Fip coin $n$ times. Let $A_n$ be the fraction fo $H$s
+    \item Know $o=\pr[H]\approx A_n$ for $n$ large (WLLN)
+    \item Use Chebyshev to find $a$ such that $\pr{p\in[A_n-a,A_n+a]}\ge 95\%$
+    \items{
+        \item $[A_n-a,A_n+a]$ is a 95\% \textbf{confidence interval} for $p$
+        \item $[A_n-\frac{2.25}{\sqrt{n}},A_n+\frac{2.25}{\sqrt{n}}]$ is a 95\%-CI for $p$
+        \item $a=\frac{1}{\sqrt{n}}$ works
+    }
+}
+\textbf{Confidence Intervals: Result}
+\items{
+    \item Let $X_n$ be i.i.d. with mean $\mu$ and variance $\sigma^2$, $A_n=\frac{X_1+\cdots+X_n}{n}$
+    \item Then: $\pr{\mu\in[A_n-4.5\frac{\sigma}{\sqrt{n}}, A_n+4.5\frac{\sigma}{\sqrt{n}}]}\ge 95\%$
+    \item Thus, $[A_n-4.5\frac{\sigma}{\sqrt{n}}, A_n+4.5\frac{\sigma}{\sqrt{n}}]$ is a 95\%-CI for $\mu$
+    \items{
+        \item Let $X_n=1\set{\x{coin $n$ yields H}}$, Then:
+        \item $\mu=\E{X_n}=p=\pr{H}$ and $\sigma^2=\var{X_n}=p(1-p)\le\frac{1}{4}$
+        \item Hence: $[A_n-4.5\frac{0.5}{\sqrt{n}}, A_n+4.5\frac{0.5}{\sqrt{n}}]=[A_n-\frac{2.25}{\sqrt{n}},A_n+\frac{2.25}{\sqrt{n}}]$ is a 95\%-CI for $\mu$
+    }
+}
+\textbf{Confidence Intervals: Result}
+\items{
+    \item $A_n\pm4.5\frac{\sigma}{\sqrt{n}}\xs{is a 95\%-CI for $\mu$}$
+    \item Use Chebyshev:
+    \items{
+        \item $\pr{\abs{A_n-\mu}\ge4.5\frac{\sigma}{\sqrt{n}}}\le\frac{\var{A_n}}{(4.5\frac{\sigma}{\sqrt{n}})^2}\le\frac{\frac{\sigma^2}{n}}{20\frac{\sigma^2}{n}}=5\%$
+        \item Thus, $\pr{\abs{A_n-\mu}\le4.5\frac{\sigma}{\sqrt{n}}}\ge 95\%$
+    }
+}
+\eqs{
+\textbf{Confidence Interval}
+\eq{A_n\pm4.5\frac{\sigma}{\sqrt{n}}\xs{is a 95\%-CI for $\mu$}}
+\textbf{Chebyshev's Intequality}
+\eq{\pr{\abs{X-\E{X}}\ge a}\le\frac{\var{X}}{a^2}}
+}
+%%%% Topic %%%%
+\subsection*{Linear Regression: Preamble}
+%%%% Notes %%%%
+\simple{
+    \item The best guess about $Y$ if we know only the distribution of $Y$ is $\E{Y}$.
+    \item Use observation of some RV $X$ related to $Y$ to improve the guess about $Y$ by constructing a function $g(X)$ to guess $Y$.
+}
+\items{
+    \item \textbf{Proof}
+    \items{
+        \item Let $\hat{Y} = Y-\E{Y}$. Then, $\E{\hat{Y}} = 0$. So, $\E{\hat{Y}c} = 0,\forall c$.
+        \item Now: $\E{(Y-a)^2} = \E{(Y-\E{Y} +\E{Y}-a)^2}$
+        \item $=\E{(\hat{Y}+c)^2}$ with $c = \E{Y}−a$
+        \item $=\E{\hat{Y}^2 +2\hat{Y}c+c^2}=\E{\hat{Y}^2}+2\E{\hat{Y}c}+c^2$
+        \item $=\E{\hat{Y}^2} +0+c^2 \ge \E{\hat{Y}^2}$.
+        \item Hence, $\E{(Y −a)^2} \ge \E{(Y-\E{Y})^2},\forall a$.
+    }
+}
+%%%% Topic %%%%
+\subsection*{Linear Regression: Motivation}
+%%%% Notes %%%%
+\simple{
+    \item Best linear fit: \textbf{Linear Regression}
+}
+\items{
+    \item Minimizes Least Squared distance from the line and the points.
+}
+%%%% Topic %%%%
+\subsection*{Covariance}
+%%%% Notes %%%%
+\simple{
+    \item Defintiion: $\cov(X,Y)=E[(X-E[X])(Y-E[Y])]$
+    \item $E[X] = 0 \cap E[Y] = 0\implies \cov(X,Y) = E[XY]$
+    \item $\cov(X,Y) > 0 \implies $ $X$ and $Y$ are positively correlated
+    \item $\cov(X,Y) < 0 \implies$ $X$ and $Y$ are negatively correlated
+    \item $\cov(X,Y) = 0 \implies$ $X$ and $Y$ are uncorrelated
+    \item \textbf{Properties}
+    \items{
+        \item $\var{X} = \cov(X,X)$
+        \item $X,Y$ independent $\implies \cov(X,Y) = 0$
+        \item $\cov(a+X, b+Y) = \cov(X,Y)$
+        \item $\cov(aX +bY,cU +dV) = ac.\cov(X,U) +ad.\cov(X,V)+bc.\cov(Y,U) +bd.\cov(Y,V)$
+    }
+}
+\items{
+    \item Covariance Fact Proof:
+    \items{
+        \item $E[(X −E[X])(Y −E[Y])] = E[XY −E[X]Y −XE[Y] +E[X]E[Y]]$
+        \item $= E[XY]−E[X]E[Y]−E[X]E[Y] +E[X]E[Y]$
+        \item $= E[XY]−E[X]E[Y]$.
+    }
+    \item $E[X] = 0 \cap E[Y] = 0\implies \cov(X,Y) = E[XY]$
+    \item $\cov(X,Y) > 0 \implies $ RVs $X$ and $Y$ are large or small together. So, $X$ and $Y$ are said to be positively correlated.
+    \item $\cov(X,Y) < 0 \implies$ when $X$ is larger, $Y$ tends to be smaller. So, X and Y are said to be negatively correlated.
+    \item $\cov(X,Y) = 0 \implies$ $X$ and $Y$ are uncorrelated.
+}
+\eqs{
+\textbf{Covariance Definition}
+\eq{\cov(X,Y)=E[(X-E[X])(Y-E[Y])]}
+\textbf{Covariance Fact}
+\eq{\cov(X,Y)=E[XY]-E[X]E[Y]}
+}
+\pagebreak[2]
+\textbf{Covariance Calculation Example}
+\dpicl{cov}
+\begin{mdleftbar}
+$E[X] = 1\times0.15+2\times0.4+3\times0.45 = 1.9\\
+E[X^2] = 1^2 \times0.15+2^2 \times0.4+3^2 \times0.45 = 5.8\\
+E[Y] = 1\times0.2+2\times0.6+3\times0.2 = 2\\
+E[XY] = 1\times0.05+1\times2\times0.1+\cdot+3\times3\times0.2 = 4.85\\
+\cov(X,Y) = E[XY]-E[X]E[Y] = 1.05\\
+\var{X} = E[X^2]-E[X]^2 = 2.19$
+\end{mdleftbar}
+\textbf{LLSE}
+%%%% Topic %%%%
+\subsection*{Covariance}
+%%%% Notes %%%%
+\simple{
+    \item LLSE slope correponds with covariance sign (logical)
+    \item Tip: Use trick of $-\hat{Y}+\hat{Y}$, then expand and use linearity of $\E{}$
+}
+\textbf{Proof 1:}
+\items{
+    \item $Y-\hat{Y} = (Y-E[Y])-\frac{cov(X,Y)}{\var{X}}(X-E[X])$
+    \itemss{*}{
+        \item $\E{(Y-\E{Y}}\xs{and}\E{(X-\E{X})}\implies\E{Y-\hat{Y}} = 0$
+    }
+    \item $\E{(Y-\hat{Y})X}=0$
+    \itemss{*}{
+        \item $\E{(Y-\hat{Y})X} = \E{(Y-\hat{Y})(X-\E{X})}$ because $\E{(Y-\hat{Y})\E{X}} = 0$
+        \item $\E{(Y -\hat{Y} )(X -\E{X})}= \E{(Y -\E{Y})(X -\E{X})}-\frac{\cov(X,Y)}{\var{X}}\E{(X -\E{X})(X -\E{X})}=\xs{(*)}  \cov(X,Y)-\frac{\cov(X,Y)}{\var{X}}\var{X} = 0$
+        \item (*) Recall that $\cov(X,Y) = \E{(X -\E{X})(Y -\E{Y})}$ and $\var{X} = \E{(X -\E{X})^2}$
+    }
+    \item $\E{(Y-\hat{Y})(c+dX)}=0$
+    \itemss{*}{
+        \item Expand to $\E{c(Y-\hat{Y})}+d\E{(Y-\hat{Y})X}=0$
+        \item This means any linear function applies, so, $\E{(Y-\hat{Y})(\hat{Y}-a-bX)} = 0,\forall a,b$
+    }
+    \item Any mean squared error between $Y$ and $a+bX$ will be greater than or equal to the the mean squared error between $\hat{Y}$ and $a+bX$
+    \itemss{*}{
+        \item $\E{(Y-a-bX)^2}=\E{(Y-\hat{Y}+\hat{Y}-a-bX)^2}=\E{(Y-\hat{Y})^2}+\E{(\hat{Y}-a-bX)^2} +0\ge\E{(Y-\hat{Y})^2}$
+        \item This shows that $\E{(Y-\hat{Y})^2} \le \E{(Y-a-bX)^2}$, for all $(a,b)$
+        \item Thus $\hat{Y}$ is the LLSE.
+    }
+}
+\textbf{Proof 2:}
+\items{
+    \item $Y-a-bX$
+    \items{
+        \item $=Y-E{Y}-(a-E{Y})-b(X -E{X})+bE{X}$
+        \item $=Y-E{Y}-(a-E{Y} +bE{X})-b(X -E{X})$
+        \item $=Y-E{Y}-c-b(X -E{X})$
+    }
+    \item with $c = a-\E{Y} +b\E{X}$.
+    \item From the first part, we know that the best values of c and b are:
+    \items{
+        \item $c = 0$
+        \item $b = \cov(X -\E{X},Y -\E{Y})/var(X -\E{X}) = \frac{\cov(X,Y)}{\var{X}}$
+    }
+    \item Thus, $0 = c = a-\E{Y} +b\E{X}$, so that $a = \E{Y}-b\E{X}$.
+    \item Hence, $a+bX = \E{Y}-b\E{X} +bX = \E{Y} +b(X -\E{X})= \E{Y} +\frac{\cov(X,Y)}{\var{X}}(X -\E{X})$.
+}
+\textbf{Estimation Error}
+\items{
+    \item $\E{\abs{Y -L[Y|X]}^2} = \E{(Y -\E{Y}-(\cov(X,Y)/\var{X})(X -\E{X}))^2}= \E{(Y -\E{Y})^2}-2(\cov(X,Y)/\var{X})\E{(Y -\E{Y})(X -\E{X})}+(\cov(X,Y)/\var{X})^2\E{(X -\E{X})^2}= \var{Y}-\frac{\cov(X,Y)^2}{\var{X}}$
+    \item Without observations, the estimate is $\E{Y}$, the error is $\var{Y}$
+    \item Observing $X$ reduces the error. If $X$ and $Y$ are highly correlated, the mean squared error is reduced (intuitive)
+}
+\eqs{
+\textbf{LLSE} where $X$ and $Y$ have a given dist. $\pr{X=x,Y=y}$
+\eq{L[Y|X]=\E{Y}+\frac{\cov(X,Y)}{\var{X}}(X-\E{X})}
+}
+\end{document}

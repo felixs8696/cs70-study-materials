@@ -1,0 +1,115 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow, listings}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}
+
+\title{CS70 - Lecture 14 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Counting}
+%%%% Notes %%%%
+\textbf{Tree Counting: Slow}
+\begin{itemize}
+    \item Build up string by bits, total amount of leaves is total possibilities
+\end{itemize}
+\begin{mdframed}
+\textbf{First Rule of Counting: Product Rule:}
+\begin{itemize}
+    \item If objects constructed from a sequence of choices $n_1, n_2, ..., n_k$
+    \item Total number of objects = $n_1 \times n_2 \times \cdots \times n_k$
+\end{itemize}
+\end{mdframed}
+\textbf{Counting Functions/Polynomials}
+\begin{itemize}
+    \item There are $|T|^{|s|}$ functions $f : S \rightarrow T$
+    \begin{itemize}
+        \item $|T|$ choices for mapping of $f(s_i)$ (Use product rule)
+    \end{itemize}
+    \item $p^{d+1}$ polynomials of degree $d \bmod{p}$
+    \begin{itemize}
+        \item $p$ choices for each of the $d+1$ coefficients
+    \end{itemize}
+\end{itemize}
+\textbf{Permutations}
+\begin{itemize}
+    \item Derived from the first rule of counting (product rule)
+    \item Choose from less items each step
+    \item Permutations of $n$ objects: number of orderings of $n$ objects (no replacements)
+    \begin{itemize}
+        \item $n \times (n-1) \times (n-2) \times\cdots \times 1 = n!$
+    \end{itemize}
+    \item Number of one to one functions $|S| \rightarrow |S|$ 
+    \begin{itemize}
+        \item Decreasing choices every step: $|S| \times |S|-1 \times \cdots \times 1 = |S|!$
+    \end{itemize}
+\end{itemize}
+\begin{mdframed}
+\textbf{Permutation Formula}
+\begin{itemize}
+    \item Number of different samples of saize $k$ from $n$ numbers \textbf{without replacement}
+        \begin{equation}nPk = n \times (n-1) \times (n-2) \times\cdots \times (n-(k-1)) = \frac{n!}{(n-k)!}\end{equation}
+\end{itemize}
+\end{mdframed}
+\textbf{Counting Sets: When order doesn't matter}
+\begin{mdframed}
+\textbf{Second Rule of Counting: Order Doesn't Matter (Combination):}
+\begin{itemize}
+    \item If order doesn't matter, count the number of ordered objects (permutations) and divide by number of orderings
+    \item Choose $k$ out of $n$ possibilities
+    \begin{equation}\binom{n}{k}= nCk = \frac{n!}{k!(n-k)!}\end{equation}
+\end{itemize}
+\end{mdframed}
+\begin{mdframed}
+\textbf{Sampling:}
+\begin{itemize}
+    \item Sample $k$ items out of $n$
+    \item Without replacement:
+    \begin{itemize}
+        \item If order matters (first rule): $\frac{n!}{(n-k!)}$
+        \item If order does not matter (second rule): $\frac{n!}{k!(n-k!)}$
+    \end{itemize}
+    \item With replacement:
+    \begin{itemize}
+        \item If order matters (first rule): $n^k$
+        \item \textbf{see Stars and Bars formula (3)}
+    \end{itemize}
+\end{itemize}
+\end{mdframed}
+\textbf{Anagrams:}
+\begin{itemize}
+    \item First rule on total number of letters $N$: $N!$ total permutations
+    \item Divide by the number of duplicate permutations generated due to $D$ duplicate letters: First rule: $D!$
+    \item total distinct permutations = $\frac{N!}{A!B!\cdots D!}$ (can have multiple duplicate sets of letters)
+\end{itemize}
+\textbf{Stars and Bars:}
+\begin{itemize}
+    \item Ways $k$ people split $n$ things
+    \item Ways to add up $k$ numbers to sum to $n$
+    \item $k$ undordered choices from set of $n$ possibilities
+    \item $\dbinom{\textrm{total} + \textrm{(sections - 1)}}{\textrm{sections - 1}}$
+    \begin{equation}\binom{n+k-1}{k-1}\end{equation}
+\end{itemize}
+%%%% Topic %%%%
+\subsection*{Summary}
+%%%% Notes %%%%
+\textbf{First Rule (Product)}
+\begin{itemize}
+    \item $k$ samples
+    \item With replacement: $n^k$
+    \item Without replacement: $\frac{n!}{(n-k)!}$
+\end{itemize}
+\textbf{Second Rule (Division)}
+\begin{itemize}
+    \item When order doesn't matter (sometimes): can divide
+    \item Without replacement (order doesn't matter): $\binom{n}{k}=\frac{n!}{(n-k)!k!}$ $n$ choose $k$
+    \begin{itemize}
+        \item You pick a different object every time. The total amount of orderings for your $k$ objects is $k!$, so divide sample without replacement by $k!$ because order doesn't matter
+    \end{itemize}
+\end{itemize}
+\textbf{One-to-one Rule}
+\begin{itemize}
+    \item Equal in number if one-to-one (Bijection)
+    \item With replacement (order doesn't matter): $\binom{k+n-1}{n-1}$
+\end{itemize}
+\end{document}

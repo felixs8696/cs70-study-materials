@@ -1,0 +1,285 @@
+\documentclass{article}\usepackage{amsmath,amssymb,amsthm,tikz,tkz-graph,color,chngpage,soul,hyperref,csquotes,graphicx,floatrow,listings, mathrsfs,framed,scrextend, setspace}\newcommand*{\QEDB}{\hfill\ensuremath{\square}}\newtheorem*{prop}{Proposition}\renewcommand{\theenumi}{\alph{enumi}}\usepackage[shortlabels]{enumitem}\usepackage[nobreak=true]{mdframed}\usetikzlibrary{matrix,calc}\MakeOuterQuote{"}\usepackage[margin=0.75in]{geometry} \newtheorem{theorem}{Theorem}\newcommand{\Z}{\mathbb Z}\newcommand{\R}{\mathbb R}\newcommand{\Q}{\mathbb Q}\newcommand{\N}{\mathbb N}\newcommand{\x}[1]{\textrm{#1}}\newcommand{\pr}{\textrm{Pr}}
+\newcommand{\xs}[1]{\textrm{ #1 }}
+\newcommand{\dincludegraphics}{\includegraphics[width=0.5\textwidth]}
+\newcommand{\tincludegraphics}{\includegraphics[width=0.33\textwidth]}
+\newcommand{\sumlim}[3]{\sum\limits_{#1}^{#2}#3}
+\newcommand{\eq}[1]{\begin{equation}#1\end{equation}}
+\newcommand{\w}{\omega}\newcommand{\Om}{\Omega}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\renewenvironment{leftbar}[2][\hsize]
+{
+    \def\FrameCommand
+    {
+        {\color{#2}\vrule width 3pt}
+        \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newcommand{\easy}[2]{\begin{leftbar}{#1}#2\end{leftbar}}
+\newcommand{\eqs}[1]{\begin{mdframed}#1\end{mdframed}}
+\newcommand{\simple}[1]{\easy{gray}{#1}}
+\newcommand{\ex}[1]{\easy{blue}{#1}}
+\providecommand{\abs}[1]{\lvert#1\rvert} \providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\integ}[3]{\int_{#1}^{#2}#3}
+
+\title{CS70 - Lecture 20 Notes}
+\author{Name: Felix Su$\quad$SID: 25794773}
+\date{Spring 2016$\quad$GSI: Gerald Zhang}
+\begin{document}
+\maketitle
+
+%%%% Topic %%%%
+\subsection*{Expectation}
+%%%% Notes %%%%
+\eqs{
+\textbf{Expected Value Defintion:}
+\eq{E[X]:=\sumlim{x}{}{x\pr[X=x]}=\sumlim{\w}{}{X(\w)\pr[\w]}}
+\textbf{Expectation of Function of RVs}
+\eq{E[g(X,Y)]=\sumlim{x,y}{}{g(x,y)\pr[X=x,Y=y]}=\sumlim{\w}{}{g(X(\w),Y(\w))}\pr[\w]}
+\textbf{Linearity of Expectation}
+\eq{E[aX+bY+c]=aE[X]+bE[Y]+c}
+}
+%%%% Topic %%%%
+\subsection*{Uniform Distribution}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item RV $X$ equally likely to take on any of its values
+    \item $E[X]$ of uniformly distributed $X$ is avg of all outcomes 
+\end{enumerate}
+}
+\eqs{
+\textbf{Uniform Distribution Example}
+\eq{\pr[X=m]=\frac{1}{n} \xs{for} m=1,2,\cdots,n}
+\textbf{Expectation Uniform Distribution}
+\eq{E[X]=\sumlim{m=1}{n}{m\pr[X=m]}=\sumlim{m=1}{n}{m}\frac{1}{n}=\frac{n+1}{2}}
+}
+%%%% Topic %%%%
+\subsection*{Geometric Distribution}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item Let $X$ = Number of flips of coin with $\pr[H]=p$ until we get $H$, so $X(\w_n)=n$
+    \item Higher $p \Rightarrow $ smaller expected $X$
+\end{enumerate}
+}
+\eqs{
+\textbf{Geometric Distribution}
+\eq{\pr[X=n]=(1-p)^{n-1}p, n\ge1}
+\textbf{Use Geometric Sum}
+\eq{\sumlim{n=1}{\infty}{\pr[X_n]}=\sumlim{n=1}{\infty}{(1-p)^{n-1}p}=p\sumlim{n=0}{\infty}{(1-p)^n}=\frac{p}{1-(1-p)}= 1}
+}
+\textbf{Derive Geometric Sum}
+\ex{
+If $\abs{a}<1$ and $S:=\sumlim{n=0}{\infty}{a^n}=\frac{1}{1-a}$:\\
+\begin{align}
+S &= 1+a+a^2+a^3+\cdots\\
+aS &= \quad\,\,\, a+a^2+a^3+\cdots \xs{(shifted right 1)}\\
+(1-a)S &= 1+a-a+a^2-a^2+\cdots=1 \xs{(subtract above two terms)}
+\end{align}
+}
+%%%% Topic %%%%
+\subsection*{Geometric Distribution Expectation}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item $X=_DG(p)$ where $_DG(p)\equiv\pr[X=n]=(1-p)^{n-1}p,n\ge 1$
+\end{enumerate}
+}
+\begin{itemize}
+    \item $E[X]=\sumlim{n=1}{\infty}{n\pr[X=n]}=\sumlim{n=1}{\infty}{n(1-p)^{n-1}p}$
+\end{itemize}
+\eqs{
+\textbf{Expectation of Geometric Distribution}
+\eq{E[X]=\sumlim{n=1}{\infty}{n\pr[X=n]}=\sumlim{n=1}{\infty}{n(1-p)^{n-1}p}=\frac{1}{p}}
+}
+\textbf{Derive Expectation of Geometric Distribution}
+\ex{
+\begin{align}
+E[X] &= p+2(1-p)p+3(1-p)^2p+4(1-p)^3p+\cdots\\
+(1-p)E[X] &= \quad\quad (1-p)p+2(1-p)^2p+3(1-p)^3p+\cdots \xs{(shifted right 1)}\\
+pE[X] &= p+(1-p)p+(1-p)^2p+(1-p)^3p+\cdots=\sumlim{n=1}{\infty}{\pr[X=n]}=1 \xs{(subtract above two terms)}
+\end{align}
+}
+\textbf{Time to Collect Coupons}
+\ex{
+\onehalfspacing{
+\begin{itemize}
+    \item Note: $H(n)=1+\frac{1}{2}+\cdots+\frac{1}{n}$ (Harmonic Number)
+    \item $H(n)=1+\frac{1}{2}+\cdots+\frac{1}{n}\approx\integ{1}{n}{\frac{1}{x}dx}=\ln(n)$
+    \item $H(n)\approx \ln(n) +\gamma$ where $\gamma\approx0.58$ (Euler-Mascheroni constant) to account for bars sticking above graph
+\end{itemize}
+$X$ - time to get $n$ coupons\\
+$\pr[\x{get ith coupon}|\x{got i-1 coupons}]=\frac{n-(i-1)}{n}=\frac{n-i+1}{n}$\\
+$E[X_i]=\frac{1}{p}=\frac{n}{n-i+1},i=1,2,\cdots,n$\\
+$E[X]=\sumlim{i=1}{n}{E[X_i]}=\sumlim{i=1}{n}{\frac{n}{n-i+1}}=n(1+\frac{1}{2}+\cdots+\frac{1}{n})=:nH(n)\approx n(\ln n + \gamma)$\\
+}
+}
+\textbf{Stacking}
+\ex{
+\begin{itemize}
+    \item Cards have width 2
+    \item Keep putting cards 1/2 to the right
+    \item At center of mass, all mass on left = all mass on right
+    \item So, if $x=$ dist. between C.O.M and right side of base card and $n$ cards weigh $n$, $nx=1-x$ and $x=\frac{1}{(n+1)}$
+    \item Induction shows that the C.O.M after $n$ cards is $H(n)$ away from the rightmost edge of the bas card
+\end{itemize}}
+%%%% Topic %%%%
+\subsection*{Geometric Distribution: Memoryless}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item If $X=G(p)$, probability of any $X$ occurring is not dependent on previous events
+\end{enumerate}
+}
+\begin{itemize}
+    \item Let $X=G(p)$. For $n \ge 0$: $\pr[X \ge n]=\pr[\x{first n flips are T}]=(1-p)^n$
+    \item \textbf{Thm}: $\pr[X>n+m|X>n]=\pr[X>m],m,n\ge 0$
+    \item $\pr[X>n+m|X>n]=\dfrac{\pr[X>n+m \cap X>n]}{\pr[X>n]}=\dfrac{\pr[X>n+m]}{\pr[X>n]}=\dfrac{(1-p)^{n+m}}{(1-p)^n}=(1-p)^m=\pr[X>m]$
+\end{itemize}
+\eqs{
+\textbf{Memoryless Geometric Distribution Theorem}
+\eq{\pr[X>n+m|X>n]=\pr[X>m],m,n\ge 0}
+}
+%%%% Topic %%%%
+\subsection*{Expectation of Natural Numbers (works for Geometric Distribution)}
+%%%% Notes %%%%
+\begin{itemize}
+    \item \textbf{Thm:} For RV $X$ that takes values $\set{0,1,2,\cdots}$: $E[X]=\sumlim{i=1}{\infty}{\pr[X\ge i]}$
+\end{itemize}
+\eqs{
+\textbf{For Natural Number RVs $X$}
+\eq{E[X]=\sumlim{i=1}{\infty}{\pr[X\ge i]}}
+}
+%%%% Topic %%%%
+\subsection*{Poisson}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item For binomial distribution where $\pr[H]=\lambda/n$
+    \item $X=P(\lambda)\iff\pr[X=m]\approx\frac{\lambda^m}{m!}e^{-\lambda}$
+    \item Expecation of Poisson Distribution = $\lambda$
+\end{enumerate}
+}
+\begin{itemize}
+    \item Flip coin $n$ times where $\pr[H]=\lambda/n$
+    \item RV $X$ = no. of heads (Binomial), thus $X=B(n,\lambda/n)$
+    \item \textbf{Poisson Distribution} is the distribution of $X$ "for large $n$" and $\lambda$ is constant
+    \item Binomial Representation: $\pr[X=m]=\binom{n}{m}p^m(1-p)^{n-m}$, with $p=\lambda n$
+\end{itemize}
+\textbf{Poisson Proof}
+\ex{
+\begin{itemize}
+    \item $\pr[X=m]=\frac{n(n-1)\cdots)(n-m+1)}{m!}(\frac{\lambda}{n})^m(1-\frac{\lambda}{n})^{n-m}=\frac{n(n-1)\cdots)(n-m+1)}{n^m}(\frac{\lambda^m}{m!})(1-\frac{\lambda}{n})^{n-m}$
+    \item $\approx (1)(\frac{\lambda^m}{m!})(1-\frac{\lambda}{n})^{n-m}\approx (\frac{\lambda^m}{m!})(1-\frac{\lambda}{n})^n$ (Because $n>>m$)
+    \item $\approx \frac{\lambda^m}{m!}e^{-\lambda}$ (Because $(1-\frac{a}{n})^n\approx e^{-a}$)
+\end{itemize}
+}
+\textbf{Poisson Expectation Proof}
+\ex{
+\begin{itemize}
+    \item $E[X]=\sumlim{m=1}{\infty}{m\times\frac{\lambda^m}{m!}e^{-\lambda}}=e^{-\lambda}\sumlim{m=1}{\infty}{\frac{\lambda^m}{(m-1)!}}=e^{-\lambda}\sumlim{m=0}{\infty}{\frac{\lambda^{m+1}}{m!}}=e^{-\lambda}\lambda\sumlim{m=0}{\infty}{\frac{\lambda^{m}}{m!}}=e^{-\lambda}\lambda e^{\lambda}=\lambda$
+\end{itemize}
+}
+\eqs{
+\textbf{Poisson Distribution}
+\eq{\pr[X=m]\approx\frac{\lambda^m}{m!}e^{-\lambda}, m\ge 0}
+\textbf{Expectation of Poisson}
+\eq{E[X]=\lambda}
+}
+%%%% Topic %%%%
+\subsection*{Distributions Summary}
+%%%% Notes %%%%
+\eqs{
+\textbf{Uniform Distribution}
+\eq{U[1,\cdots,n]:\pr[X=m]=\frac{1}{n},m=1,\cdots,n; E[X]=\frac{n+1}{2}}
+\textbf{Binomial Distribution}
+\eq{B(n,p):\pr[X=m]=\binom{n}{m}p^m(1-p)^{n-m},m=0,\cdots,n;E[X]=np}
+\textbf{Geometric Distribution}
+\eq{G(p):\pr[X=n]=(1-p)^{n-1}p,n=1,2,\cdots;E[x]=\frac{1}{p}}
+\textbf{Poisson Distribution}
+\eq{P(\lambda):\pr[X=m]=\frac{\lambda^m}{m!}e^{-\lambda},m\ge0;E[X]=\lambda}
+}
+%%%% Topic %%%%
+\subsection*{Independent Random Variables}
+%%%% Notes %%%%
+\simple{
+\begin{enumerate}[1.]
+    \item Two RVs $X$ and $Y$ are \textbf{independent} if and only if, all the corresponding events are independent.
+    \item Same as independence of events.
+    \item RVs are \textbf{mutually independent} if the product of their combined intersection (and) is the same as the product of their individual probabilities.
+    \item Events $A,B,C$ are pairwise (resp. mutually) independent iff their Indicator RVs $1_A,1_B,1_C$ are also pairwise independent.
+\end{enumerate}
+}
+\begin{itemize}
+    \item Independence Thm Proof:
+    \item 'if' left direction: if you choose $A=\set{a}, B=\set{b}$, then the thm eq. is the same as:
+    \item $\pr[X=a\cap Y=b]=\pr[X=a]\pr[Y=b], \forall a,b$
+    \item 'only if' right direction: sum over all possible pairs in $A$ and $B$ of the probability that $X$ is in $A$ and $Y$ is in $B$
+    \item $\mathop{\sum\limits_{a\in A}\sum\limits_{b\in B}}\limits^{\pr[X\in A \cap Y\in B]}\pr[X=a \cap Y=b]=\sumlim{a\in A}{}{\sumlim{b\in B}{}{\pr[X=a]\pr[Y=b]}}$
+    \item $=\sumlim{a\in A}{}{\pr[X=a]}\sumlim{b\in B}{}{\pr[Y=b]}=\pr[X\in A]\pr[Y\in B]$
+\end{itemize}
+\textbf{Functions of Independent RVs}
+\simple{
+\begin{enumerate}[1.]
+    \item Functions of independent RVs are independent
+    \item If $X,Y,Z$ are pairwise independent, but not mutually independent, it may indicate that $f(x)$ and $g(Y,Z)$ are not independent
+    \item Functions of disjoint collections of mutually independent RVs are also mutually independent
+\end{enumerate}
+}
+\begin{itemize}
+    \item Independent functions of inpdendent RVs Proof:
+    \begin{itemize}
+        \item Definition of Inverse Image: $h(z)\in C \iff z \in h^{-1}(C):=\set{z|h(z)\in C}$
+        \item $\pr[f(X)\in A, g(Y) \in B] = \pr[X\in f^{-1}(A)\cap Y\in g^{-1}(B)],$ by def. of Inv. Im.
+        \item $=\pr[X\in f^{-1}(A)]\pr[Y\in g^{-1}(B)]$, because $X,Y$ ind.
+        \item $=\pr[f(x)\in A]\pr[g(Y)\in B]$
+    \end{itemize}
+    \item Functions of disjoint collections of mutually independent RVs are also mutually independent
+    \begin{itemize}
+        \item Let $\set{X_n, n\ge 1}$ be mutually independent. And $Y_1 := f(X_1,X_2), Y_2 := f(X_3,X_4), Y_3:= f(X_5,X_6)$
+        \item Then, $Y_1, Y_2, Y_3$ are mutually independent
+    \end{itemize}
+\end{itemize}
+\textbf{Mean($E[X]$) of product of Ind. RVs}
+\simple{
+\begin{enumerate}[1.]
+    \item Expectation of XY is equal to exp. of $X$ times exp. of $Y$
+\end{enumerate}
+}
+\begin{itemize}
+    \item Proof:
+    \item $E[g(x,y,z)]=\sumlim{x,y}{}{g(x,y)\pr[X=x\cap Y=y]}$, so, $E[XY]=\sumlim{x,y}{}{xy\pr[X=x\cap Y=y]}=\sumlim{x,y}{}{xy\pr[X=x]\pr[Y=y]}$
+    \item $=\sumlim{x}{}{x\pr[X=x]}\sumlim{y}{}{y\pr[Y=y]}=E[X]E[Y]$
+\end{itemize}
+\eqs{
+\textbf{Independence of $X$ and $Y$}
+\eq{\pr[Y=b|X=a]=\pr[Y=b], \forall a,b}
+\eq{\pr[X=a\cap Y=b]=\pr[X=a]\pr[Y=b], \forall a,b}
+\textbf{Thm: $X$ and $Y$ are independent iff}
+\eq{\pr[X\in A\cap Y\in B]=\pr[X\in A]\pr[Y\in B], \forall A,B \subset \R}
+\textbf{Independent Functions}
+\eq{\x{If } X,Y \xs{are independent RVs} \implies f(X),g(Y) \xs{are independent} \forall f(),g()}
+\textbf{Mean of product of Independent RV} (Only for Independent RVs)
+\eq{\x{If } X,Y \xs{are ind. RVs} \implies E[XY]=E[X]E[Y]}
+\textbf{$X,Y,Z$ are Mutually Independent If}
+\eq{\pr[X=x,Y=y,Z=z]=\pr[X=x]\pr[Y=y]\pr[Z=z], \forall x,y,z}
+}
+\textbf{Independent RV Examples}\\
+$X,Y,Z$ are pairwise independent and $U[1,2,\cdots,n]$\\
+Let $E[X]=E[Y]=E[Z]=0, E[X^2]=E[Y^2]=E[Z^2]=1$
+\ex{
+\begin{itemize}
+    \item $E[(X+2Y+3Z)^2]=E[X^2+4Y^2+9Z^2+4XY+12YZ+6XZ]$
+    \item $=1+4+9+(4)(0)(0)+12(0)(0)+6(0)(0)=14$ (Because Independent RV product and Lin. of Exp.)
+\end{itemize}
+}
+\ex{
+\begin{itemize}
+    \item $E[(X-Y)^2]=E[X^2+Y^2-2XY]=2E[X^2]-2E[X]^2$
+    \item $=\frac{1+3n+2n^2}{3}-\frac{(n+1)^2}{2}$
+\end{itemize}
+}
+\end{document}
