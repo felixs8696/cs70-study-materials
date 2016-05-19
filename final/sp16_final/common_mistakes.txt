@@ -1,0 +1,148 @@
+Common Mistakes
+ 
+1.3
+ 
+- Not saying that Pr[X−100p>50−100p]≤Pr[|X−100p|>50−100p] explicitly means you were only eligible for 3 points.
+- No credit for applying Chebyshev's inequality if you divided the probability by 2
+ 
+1.4
+ 
+Mostly people made mistakes on the variance, or didn't know how to apply CLT so well. See the rubric.
+ 
+2.1
+ 
+Many people are just writing out expressions for cov(x, y), cov(y, z), cov(x,z) without giving explanations and/or counterexamples. The best way to prove something is false is provide a counterexample!
+ 
+Writing True => 0 Points
+Writing False w/o Justification => 1 Point
+Writing False w/ somewhat right direction justification => 2 points
+Writing False w/ fully correct Justification => 3 Points
+ 
+2.2
+ 
+-> Saying it's always 3.5.
+ 
+2.5
+ 
+People are just assuming that since there is an invariant distribution that the probabilities will converge, but you need to recognize that the chain is aperiodic to guarantee convergence.
+ 
+3.3
+ 
+- Only the first rubric item was awarded for two-state or three-state Markov diagrams that did not have enough states to represent the problem
+- The first and second rubric items were awarded to those who had correct Markov diagrams, but did not write down the correct first step equations
+- If you wrote down the correct first step equations but made an arithmetic error while solving for the expectation, please submit a regrade request to obtain the third rubric item
+- If you concluded that the expected number of flips was 8, and half of them are expected to be tails, please submit a regrade request (we will award you 6 points)
+- Please keep in mind that the first step equations for this problem were not the same as the examples given previously in lectures
+ 
+3.1
+ 
+- No partial credit awarded for these problems
+- Please do not submit any regrade requests for this problem unless you are certain that you have the correct answer and we did not give you points
+- In the future, please do not try writing E(Y|X) as a formula when you don't need to
+ 
+3.4
+
+Part (a)
+- Full credit answers: E(Xn+1|Xn)=(1−α−β)Xn+Nα
+- I took off 0.5 points for the following answers: α(N−Xn)+βXn, or replacing Xn with E(Xn). Other similar answers will not be considered for partial credit.
+
+Part (b)
+- 0.5 partial credit points were awarded for writing down E(Xn+1)=E(E(Xn+1|Xn))
+- 2 points were awarded by writing down E(Xn+1) as a function of E(Xn) in a manner that was consistent with part (a) (Note that simply writing down equations for E(X1), E(X2), and E(X3) were not sufficient! I was specifically looking for the use of the law of total expectation.)
+- 1 point was awarded for correctly solving the recurrence relation (either by writing down a summation formula for E(Xn) or by finding the closed form solution)
+- 0.5 points were taken off for mistakes, such as writing E(X1)=N, or "off by one" errors in the summation indices
+
+Part (c)
+- 1 point was awarded for drawing a Markov chain diagram, or writing transition probabilities (simply writing down π was not sufficient)
+- Full credit was awarded for correctly writing down the probability of a binomial distribution with parameters N and p=α/(α+β) (No one got this one correct)
+ 
+3.5.  Assuming that winning (or losing) against the friend’s two darts are two independent events.
+
+
+3.6
+ 
+Part (a)
+- Using P(A|B) = P(A, B) / P(B) without any mention of Bayes' rule did not get any credit
+- At most half credit for leaving the expression in terms of events and not calculating the probabilities
+- Half credit for correct setup of probabilities, but common mistakes of calculating probabilities include:
+  - Choosing WITH replacement instead of without
+
+3.7
+
+Part (a)
+- Full credit answers: E(Y|X)=(n−X)/(m−1) or E(Y|X=k)=(n−k)/(m−1)
+- I also gave 1.5 points for E(Y|X)=(n−X)/m
+- The partial credit rubric item for 0.5 points was awarded for an expression equivalent to the following: E(Y|X=x)=∑yyPr(Y=y|X=x).
+- 1 point was taken off for writing E(Y|X) as a function of E(X) instead of as a function of X
+- Common mistake: X and Y are not independent.
+
+Part (b)
+- Full credit answers: Answers equivalent to (n−X)/(m−1)
+- I also gave full credit to answer which stated that L(Y|X)=E(Y|X) since E(Y|X) is linear, only if your answer to part (a) was a linear function of X (if it was not immediately clear that your expression E(Y|X) was a linear function of X, then these points were not awarded)
+- The partial credit rubric item for 0.5 points was awarded for an expression equivalent to the following: L(Y|X)=E(Y)+[Cov(X,Y)/Var(X)](X−E(X))
+- The partial credit rubric item for 1.5 points was awarded very rarely, mainly to students who correctly calculated Cov(X,Y)=−n/m2 (computing E(X) and E(Y) are not sufficient)
+
+Part (c)
+- Full credit answers: First step equations, β(i)=1+(1−i/m)β(i+1), where β(i) represents the expected number of balls to throw with i filled bins
+- The partial credit rubric item was awarded for recognizing that the states in the Markov chain should be the number of filled bins
+- Common mistakes: A Markov chain where the states represent each individual bin, or a Markov chain with only two states (bin with one ball, bin with two balls), or a Markov chain which only counts two bins total (there are m bins total), or other incorrect Markov chains, forgetting the 1 in the first step equations
+ 
+4.2
+ 
+  4 = undecidable
+  5 = undecidable
+  6 = decidable
+    correct solution = 1 point
+    incorrect solution = 0 points
+    no partial credit
+ 
+5.3:
+ 
+  2 points = k(n−1k−2)+(n−1k−1)
+ 
+  1 point = k(n−c1k−c2)+(n−c3k−c3)
+ 
+  1 point = very close to (n+k−1k−1)−∑k−1i=2(ki)(n−1k−i)
+ 
+  0 points = everything else
+ 
+5.7
+ 
+  Completely unambigious that the answer was 2 ==> 2 points.
+ 
+  Unambigious answer that was not 2 ==> 0 points.
+ 
+  Not clear what the answer was ==> 0 points.
+ 
+6.1
+ 
+Mostly people got this right.
+ 
+Some confusion on contrapostive, but mostly fine.
+ 
+6.2
+ 
+Thought one could reconstruct two variable polynomial f(x,y). Need to observe that the diagonal has x=y, to do this. Some people thought the second set of points gives info about P(x) instead of Q(x).
+ 
+6.3:
+ 
+-> Coloring vertices instead of triples.
+-> 3d-1+1 is not 3d-2.
+-> Assuming there are 3 triples, or d triples, or 3d triples.
+-> color of triple if something mod( number ), and no explanation why that would work.
+ 
+6.4:
+ 
+  ## Error A
+    Correct Split :: ∑iai10i=∑iai+∑iai(10i−1)
+    In Correct Split :: ∑iai10i=∑iai+∑iai(9∗10...+−...)
+ 
+  ## Error B:
+ 
+    Only proved one of the two directions ==> only 3 out of 4 point.
+ 
+  ## Error C:
+ 
+    We can't assume that multiples of 3 have prefixes / suffices that are multiples of 3.
+    For example, 12 is a multiple of 3, but neither 1 nor 2 is a multiple of 3.
+    This creates problems with induction.
